@@ -1,0 +1,24 @@
+{
+  "name": "gorilla_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "prequest": "^1.0.0",
+    "vk-io": "^4.0.0-rc.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GgWp123fgy/Gorilla-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GgWp123fgy/Gorilla-bot/issues"
+  },
+  "homepage": "https://github.com/GgWp123fgy/Gorilla-bot#readme"
+}
