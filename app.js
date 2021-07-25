@@ -3793,7 +3793,7 @@ gg()
 cmd.hear(/^(?:гет|get|sget|сгет)\s?([^]+)?$/i, async(message, bot) =>{ 
  if(message.user.settings.moder !== true && message.user.settings.adm !== true && message.user.settings.vlad !== true && message.user.settings.eval !== true) return; 
 let user; 
-admlogs(message)
+
 if(!message.hasForwards && !message.replyMessage) { 
 if(!message.args[1]) return bot(`вы не указали обязательный аргумент. (ссылка/id/пересланное сообщение)`); 
 
