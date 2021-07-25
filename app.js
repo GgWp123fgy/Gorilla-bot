@@ -1492,7 +1492,7 @@ cmd.hear(/^(?:профиль|💾 Профиль|проф)$/i, async (message, b
 	let text = ``;
 
 	text += `🔎 ID: ${message.user.uid}\n`;
-	text += `text += `🔥 Префикс: ${message.user.prefix.toString().replace(/0/gi, "Челик").replace(/1/gi, "🔥Топер").replace(/2/gi, "✨Ангел").replace(/3/gi, "😈Дьявол").replace(/4/gi, "❤Топ тян").replace(/5/gi, "👑Элита")}\n`;
+	text += `🔥 Префикс: ${message.user.prefix.toString().replace(/0/gi, "Челик").replace(/1/gi, "🔥Топер").replace(/2/gi, "✨Ангел").replace(/3/gi, "😈Дьявол").replace(/4/gi, "❤Топ тян").replace(/5/gi, "👑Элита")}\n`;
 if(message.user.clanid) text += `⚔ Kлан: ${clans[message.user.clanid].name}\n`;
 	if(message.user.settings.vip == true)text += `🔥 Статус «VIP»\n`;
 	if(message.user.settings.moder == true) text += `💎 Привелегия «Moder»\n`;
