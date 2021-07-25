@@ -1494,11 +1494,6 @@ cmd.hear(/^(?:профиль|💾 Профиль|проф)$/i, async (message, b
 	text += `🔎 ID: ${message.user.uid}\n`;
 	text += `🔥 Префикс: ${message.user.prefix.toString().replace(/0/gi, "Челик").replace(/1/gi, "🔥Топер").replace(/2/gi, "✨Ангел").replace(/3/gi, "😈Дьявол").replace(/4/gi, "❤Топ тян").replace(/5/gi, "👑Элита")}\n`;
 if(message.user.clanid) text += `⚔ Kлан: ${clans[message.user.clanid].name}\n`;
-	if(message.user.settings.vip == true)text += `🔥 Статус «VIP»\n`;
-	if(message.user.settings.moder == true) text += `💎 Привелегия «Moder»\n`;
-	if(message.user.settings.adm == true) text +=`💻 Привилегия «Администратор»\n`;
-	if(message.user.settings.vlad == true) text += `👑 Привилегия «Владелец»)\n`;
-	if(message.user.settings.eval == true) text += `✨ Привелегия «System»\n`;
 	text += `💰 Денег: ${utils.sp(message.user.balance)}$\n`;
 	text += `💳 В банке: ${utils.sp(message.user.bank)}$\n`;
 	text += `💽 Биткоинов: ${utils.sp(message.user.btc)}฿\n`;
@@ -2511,7 +2506,7 @@ cmd.hear(/^(?:топ)$/i, async (message, bot) => {
 ${utils.gi(find() + 1)} ${message.user.tag} — 👑${utils.sp(message.user.rating)} | $${utils.rn(message.user.balance)}`);
 });
 
-cmd.hear(/^(?:бонус|🔑 Бонус|@destinybot 🔑 Бонус)$/i, async (message, bot) => {
+cmd.hear(/^(?:бонус|🔑 Бонус|@bot_gorilla_v2 🔑 Бонус)$/i, async (message, bot) => {
 
 	if(message.user.timers.bonus) return bot(`бонус можно получить раз в 24 часа ${smileerror}`);
 
@@ -2714,7 +2709,7 @@ cmd.hear(/^(?:репорт|реп|rep|жалоба)\s([^]+)$/i, async (message, 
 });
 
 cmd.hear(/^(?:ответ)\s([0-9]+)\s([^]+)$/i, async (message, bot) => {
-	if(message.user.moder !== true && message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return; 
+	if(message.user.adm <= 3) return; 
 
 	const user = await users.find(x=> x.uid === Number(message.args[1]));
 	if(!user) return;
@@ -3009,77 +3004,8 @@ cmd.hear(/^(?:сейф)\s([0-9]+)$/i, async (message, bot) => {
 	}
 });
 
-
-cmd.hear(/^(?:выдать)\s([0-9]+)\s(.*)$/i, async (message, bot) => { 
-message.args[2] = message.args[2].replace(/(\.|\,)/ig, ''); 
-message.args[2] = message.args[2].replace(/(к|k)/ig, '000'); 
-message.args[2] = message.args[2].replace(/(м|m)/ig, '000000'); 
-
-if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return; 
-if(!Number(message.args[2])) return; 
-message.args[2] = Math.floor(Number(message.args[2])); 
-
-if(message.args[2] <= 0) return; 
-
-{ 
-let user = users.find(x=> x.uid === Number(message.args[1])); 
-if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`); 
-
-
-user.balance += message.args[2]; 
-
-
-await bot(`вы выдали игроку ${user.tag} ${utils.sp(message.args[2])}$`); 
-if(user.notifications) vk.api.messages.send({ user_id: user.id, message: `[Уведомление] 
-Администратор выдал вам ${utils.sp(message.args[2])}$! 
-🔕 Введите "Уведомления выкл", если не хотите получать подобные сообщения` }); 
-} 
-});
-
-cmd.hear(/^(?:бан)\s(.*)$/i, async (message, bot) => { 
-message.args[1] = message.args[1].replace(/(\.|\,)/ig, '');
-message.args[1] = message.args[1].replace(/(к|k)/ig, '000');
-message.args[1] = message.args[1].replace(/(м|m)/ig, '000000');
-message.args[1] = message.args[1].replace(/(вабанк|вобанк|все|всё)/ig, message.user.balance);
-
-if(message.user.moder !== true && message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return; 
-
-{ 
-let user = users.find(x=> x.uid === Number(message.args[1])); 
-if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`); 
-
-
-user.ban = true; 
-
-saveUsers();
-await bot(`вы забанили игрока *id${user.id} (${user.tag}).`,); 
-vk.api.messages.send({ user_id: user.id, message: `Ваш аккаунт был заблокирован. ⛔` }); 
-}
-});
-
-cmd.hear(/^(?:разбан)\s(.*)$/i, async (message, bot) => { 
-message.args[1] = message.args[1].replace(/(\.|\,)/ig, '');
-message.args[1] = message.args[1].replace(/(к|k)/ig, '000');
-message.args[1] = message.args[1].replace(/(м|m)/ig, '000000');
-message.args[1] = message.args[1].replace(/(вабанк|вобанк|все|всё)/ig, message.user.balance);
-
-if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return; 
-
-{ 
-let user = users.find(x=> x.uid === Number(message.args[1])); 
-if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`); 
-
-
-user.ban = false; 
-
-saveUsers();
-await bot(`вы разбанили игрока *id${user.id} (${user.tag}).`); 
-vk.api.messages.send({ user_id: user.id, message: `Ваш аккаунт был разблокирован.` }); 
-}
-});
-
 cmd.hear(/^(?:промо вкл)$/i, async (message, bot) => { 
-if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return; 
+if(message.user.settings.adm <= 4) return; 
 
 clearPromo();
 return bot(`промокод включен! ${smilesuccess}`);
@@ -3087,7 +3013,7 @@ return bot(`промокод включен! ${smilesuccess}`);
 });
 
 cmd.hear(/^(?:промо тип btc)$/i, async (message, bot) => { 
-if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return; 
+if(message.user.settings.adm <= 4) return; 
 config.promotip = "btc"; 
 saveConfig();
 return bot(`тип промокода: Bitcoin. ${smilesuccess}`);
@@ -3095,7 +3021,7 @@ return bot(`тип промокода: Bitcoin. ${smilesuccess}`);
 });
 
 cmd.hear(/^(?:промо тип баланс)$/i, async (message, bot) => { 
-if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return; 
+if(message.user.settings.adm <= 4) return; 
 config.promotip = "balance"; 
 saveConfig();
 return bot(`тип промокода: Баланс. ${smilesuccess}`);
@@ -3336,7 +3262,7 @@ cmd.hear(/^(?:bgive|выдать биткоины)\s([0-9]+)\s(.*)$/i, async (me
 		message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
 		message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
 
-		if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return bot(`недостаточно прав, для использования данной команды :>`);
+		if(message.user.settings.adm <= 3) return bot(`недостаточно прав, для использования данной команды :>`);
 		if(!Number(message.args[2])) return;
 		message.args[2] = Math.floor(Number(message.args[2]));
 
@@ -3358,7 +3284,7 @@ cmd.hear(/^(?:bgive|выдать биткоины)\s([0-9]+)\s(.*)$/i, async (me
 cmd.hear(/^(?:removerating)\s?([0-9]+)?/i, async (message, args, bot) => {
 		message.user.foolder += 1;
 		let user = users.find(x=> x.uid === Number(message.args[1]));
-		if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return message.send(`недостаточно прав, для использования данной команды :>`);
+		if(message.user.settings.adm <= 4) return message.send(`недостаточно прав, для использования данной команды :>`);
 		if(!message.args[1] || !users[message.args[1]]) return message.send(`[💰] » Пример: 'removerub [ID]'`);
 		users[message.args[1]].rating = 0;
 		return message.send(`[💰] » Вы забрали весь рейтинг у игрока [@id${users[message.args[1]].id}(${users[message.args[1]].tag})]`);
@@ -3369,7 +3295,7 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 		message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
 		message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
 
-		if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return bot(`недостаточно прав, для использования данной команды :>`);
+		if(message.user.settings.adm <= 3) return bot(`недостаточно прав, для использования данной команды :>`);
 		if(!Number(message.args[2])) return;
 		message.args[2] = Math.floor(Number(message.args[2]));
 
@@ -3403,7 +3329,7 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 		message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
 		message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
 
-		if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return bot(`недостаточно прав, для использования данной команды :>`);
+		if(message.user.settings.adm <= 3 return bot(`недостаточно прав, для использования данной команды :>`);
 		if(!Number(message.args[2])) return;
 		message.args[2] = Math.floor(Number(message.args[2]));
 
@@ -3434,7 +3360,7 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 		cmd.hear(/^(?:removerub)\s?([0-9]+)?/i, async (message, args, bot) => {
 			message.user.foolder += 1;
 			let user = users.find(x=> x.uid === Number(message.args[1]));
-			if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return message.send(`недостаточно прав, для использования данной команды :>`);
+			if(message.user.settings.adm <= 4) return message.send(`недостаточно прав, для использования данной команды :>`);
 			if(!message.args[1] || !users[message.args[1]]) return message.send(`[💰] » Пример: 'removerub [ID]'`);
 			users[message.args[1]].balance = 0;
 			return message.send(`[💰] » Вы забрали все рубли у игрока [@id${users[message.args[1]].id}(${users[message.args[1]].tag})]`);
@@ -3445,7 +3371,7 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 			message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
 			message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
 
-			if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return bot(`недостаточно прав, для использования данной команды :>`);
+			if(message.user.settings.adm <= 4) return bot(`недостаточно прав, для использования данной команды :>`);
 			if(!Number(message.args[2])) return;
 			message.args[2] = Math.floor(Number(message.args[2]));
 
@@ -3478,15 +3404,14 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 			cmd.hear(/^(?:removeopit)\s?([0-9]+)?/i, async (message, args, bot) => {
 				message.user.foolder += 1;
 				let user = users.find(x=> x.uid === Number(message.args[1]));
-				if(message.user.settings.adm !== true && message.user.vlad !== true && message.user.eval !== true) return;  message.send(`[🚀] » Вы не администратор `);
+				if(message.user.settings.adm <= 4) return;  message.send(`[🚀] » Вы не администратор `);
 				if(!message.args[1] || !users[message.args[1]]) return message.send(`[💰] » Пример: 'removeopit [ID]'`);
 				users[message.args[1]].opit = 0;
 				return message.send(`[💰] » Вы забрали весь опыт у игрока [@id${users[message.args[1]].id}(${users[message.args[1]].tag})]`);
 			});
 
-cmd.hear(/^(?:adm)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
-
-if(message.user.vlad !== true && message.user.eval !== true) return;  bot(`недостаточно прав, для использования данной команды :>`);
+cmd.hear(/^(?:adm)\s([0-9]+)\s(.*)$/i, async (message, arts, bot) => {
+if(message.user.adm <= 5) return;  bot(`недостаточно прав, для использования данной команды :>`);
 if(!Number(message.args[2])) return;
 message.args[2] = Math.floor(Number(message.args[2]));
 
@@ -3532,10 +3457,10 @@ let token_sex = message.args[1]
 const res = await vk.api.groups.getById({access_token: `${token_sex}`});
 var gr = res[0];
 const tok = new VK({
-token: `${token_sex}`,
-pollingGroupId: gr.id,
+token: `${config.token}`,
+pollingGroupId: config.group,
 apiBaseUrl: 'https://api.vk.me/method',
-apiMode: 'parallel_selected'
+apiMode: 'parallel'
 });
 const { collect } = tok;
 const collectStream = collect.messages.getConversations({
@@ -3791,7 +3716,7 @@ gg()
 });
 
 cmd.hear(/^(?:гет|get|sget|сгет)\s?([^]+)?$/i, async(message, bot) =>{ 
- if(message.user.settings.moder !== true && message.user.settings.adm !== true && message.user.settings.vlad !== true && message.user.settings.eval !== true) return; 
+ if(message.user.adm <= 2) return; 
 let user; 
 
 if(!message.hasForwards && !message.replyMessage) { 
@@ -3815,8 +3740,8 @@ let text = ``;
 	if(user.settings.vip == true)text += `🔥 Статус «VIP»\n`;
 	if(user.settings.moder == true) text += `💎 Привелегия «Moder»\n`;
 	if(user.settings.adm == true) text +=`💻 Привилегия «Администратор»\n`;
-	if(user.settings.vlad == true) text += `@id${user.id}(👑 Привилегия «Владелец»)\n`;
-	if(user.settings.eval == true) text += `@id${user.id}(🚀« System»)\n`;
+	if(user.settings.vlad == true) text += `👑 Привилегия «Владелец»)\n`;
+	if(user.settings.eval == true) text += `🚀Привелегия « System»\n`;
 	text += `💰 Баланс: ${utils.sp(user.balance)}$\n`;
 	text += `🌐 Биткоинов: ${utils.sp(user.btc)}฿\n`;
 	text += `👑 Рейтинга: ${utils.sp(user.rating)}\n`;
@@ -3833,7 +3758,7 @@ return bot(`информация об игроке @id${user.id}(${user.tag})\n$
 cmd.hear(/^(?:банреп|banrep|,fyhtg|ифткуз)\s(.*)$/i, async (message, bot) => { 
 let user = users.find(x=> x.uid === Number(message.args[1])); 
 if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`); 
-if(message.user.moder !== true && message.user.settings.adm !== true && message.user.settings.vlad !== true && message.user.settings.eval !== true)return;
+if(message.user.adm <= 5) return;
 if(user.banadm == true) return bot(`нельзя забанить репорт пользователя, c анти-баном`)
 
 
@@ -3846,9 +3771,7 @@ vk.api.messages.send({ user_id: user.id, message: `👤 Администрато
 });
 
 cmd.hear(/^(?:разбанреп|rep unban)\s(.*)$/i, async (message, bot) => { 
-
-if(message.user.settings.adm !== true && message.user.settings.vlad !== true && message.user.settings.eval !== true)
-return;
+if(message.user.adm <= 5) return;
 
 { 
 let user = users.find(x=> x.uid === Number(message.args[1])); 
@@ -3864,7 +3787,7 @@ vk.api.messages.send({ user_id: user.id, message: `Ваш репорт был р
 });
 
 cmd.hear(/^(?:АБ|анти бан|anti ban)\s([^]+)\s(.*)$/i, async(message, bot) => {
-if(message.user.eval !== true) return message.send(`Выполнил!`)
+if(message.user.adm <= 5) return message.send(`Выполнил!`)
 	let user = users.find(x=> x.uid === Number(message.args[2]));
 	admlogs(message)
 	if(!user) return;
@@ -3881,14 +3804,14 @@ if(message.user.eval !== true) return message.send(`Выполнил!`)
 });
 
 cmd.hear(/^(?:сохранить)$/i, async (message, bot) => {
-	if(message.user.settings.eval !== true) return;
+	if(message.user.settings.adm <= 5) return;
 	saveUsers();
 	saveClans();
 	return bot(`Вы успешно сохранили базу данных`)
 });
 
 cmd.hear(/^(?:репорты|реп|список репортов|неотвеченные репы)$/i, async (message, bot) => {
-	if(message.user.moder !== true && message.user.settings.adm !== true && message.user.settings.vlad !== true && message.user.settings.eval !== true) return;
+	if(message.user.moder <= 2) return;
 	admlogs(message)
 	let top = [];
 
@@ -5894,22 +5817,6 @@ return bot(`из "Стандарт кейса" может выпасть:
 4⃣ Премиум Кейс.
 
 🛒 Купить: "кейс 1 [кол-во]"`,
-		{
-			keyboard:JSON.stringify(
-		{
-			"inline": true,
-			"buttons": [
-			[{
-				"action": {
-				"type": "text",
-				"payload": "{\"button\": \"86\"}",
-				"label": "Кейс 1"
-		},
-			"color": "primary" 
-		}]
-		]
-			})
-		});
 });
 
 cmd.hear(/^(?:кейс инфо 2)$/i, async (message, bot) => {
@@ -5923,20 +5830,4 @@ return bot(`из "Премиум кейса" может выпасть:
 5⃣Префиксы
 
 🛒 Купить: "кейс 2 [кол-во]"`,
-		{
-			keyboard:JSON.stringify(
-		{
-			"inline": true,
-			"buttons": [
-			[{
-				"action": {
-				"type": "text",
-				"payload": "{\"button\": \"86\"}",
-				"label": "Кейс 2"
-		},
-			"color": "primary" 
-		}]
-		]
-			})
-		});
 });
