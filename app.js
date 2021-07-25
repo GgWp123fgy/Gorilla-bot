@@ -1492,6 +1492,12 @@ cmd.hear(/^(?:профиль|💾 Профиль|проф)$/i, async (message, b
 
 	text += `🔎 ID: ${message.user.uid}\n`;
 	text += `🔥Префикс: ${message.user.prefix}\n`;
+if(message.user.clanid) text += `⚔ Kлан: ${clans[message.user.clanid].name}\n`;
+	if(message.user.settings.vip == true)text += `🔥 Статус «VIP»\n`;
+	if(message.user.settings.moder == true) text += `💎 Привелегия «Moder»\n`;
+	if(message.user.settings.adm == true) text +=`💻 Привилегия «Администратор»\n`;
+	if(message.user.settings.vlad == true) text += `@id${message.user.id}(👑 Привилегия «Владелец»)\n`;
+	if(message.user.settings.eval == true) text += `@id${message.user.id}(💫 «Создатель»)\n`;
 	text += `💰 Денег: ${utils.sp(message.user.balance)}$\n`;
 	text += `💳 В банке: ${utils.sp(message.user.bank)}$\n`;
 	text += `💽 Биткоинов: ${utils.sp(message.user.btc)}฿\n`;
