@@ -1,0 +1,105 @@
+{
+	"1": {
+		"owner": 528262675,
+		"users": {
+			"0": {
+				"level": 3,
+				"names": "Сергей",
+				"vlozhil": 0,
+				"don": 0,
+				"mts2": true,
+				"volos": false,
+				"idd": 528262675,
+				"uidd": 0
+			}
+		},
+		"zashita": 0,
+		"retin": 0,
+		"aue": 0,
+		"lox": 0,
+		"topsk": 0,
+		"pisko": 10,
+		"fuflo": 0,
+		"abramovich": 0,
+		"good": 0,
+		"pal": false,
+		"number": 1,
+		"name": "свой",
+		"regclanDate": "25.07.2021, 18:17:19",
+		"balance": 0,
+		"smile": "🤘",
+		"open": true,
+		"price": 1000,
+		"exs": 0,
+		"people": 1
+	},
+	"2": {
+		"owner": 528262675,
+		"users": {
+			"0": {
+				"level": 3,
+				"names": "Сергей",
+				"vlozhil": 0,
+				"don": 0,
+				"mts2": true,
+				"volos": false,
+				"idd": 528262675,
+				"uidd": 0
+			}
+		},
+		"zashita": 0,
+		"retin": 0,
+		"aue": 0,
+		"lox": 0,
+		"topsk": 0,
+		"pisko": 10,
+		"fuflo": 0,
+		"abramovich": 0,
+		"good": 0,
+		"pal": false,
+		"number": 2,
+		"name": "Администрация",
+		"regclanDate": "25.07.2021, 19:48:48",
+		"balance": 0,
+		"smile": "🤘",
+		"open": true,
+		"price": 1000,
+		"exs": 0,
+		"people": 1
+	},
+	"number": 2,
+	"NaN": {
+		"owner": 528262675,
+		"users": {
+			"0": {
+				"level": 3,
+				"names": "Сергей",
+				"vlozhil": 0,
+				"don": 0,
+				"mts2": true,
+				"volos": false,
+				"idd": 528262675,
+				"uidd": 0
+			}
+		},
+		"zashita": 0,
+		"retin": 0,
+		"aue": 0,
+		"lox": 0,
+		"topsk": 0,
+		"pisko": 10,
+		"fuflo": 0,
+		"abramovich": 0,
+		"good": 0,
+		"pal": false,
+		"number": null,
+		"name": "Администрация",
+		"regclanDate": "25.07.2021, 18:12:56",
+		"balance": 0,
+		"smile": "🤘",
+		"open": true,
+		"price": 1000,
+		"exs": 0,
+		"people": 1
+	}
+}
