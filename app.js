@@ -1127,7 +1127,7 @@ updates.on('message', async (message) => {
 	if(message.user.settings.firstmsg)
 	{
 
-bot(`${message}, 👋 Привет!
+bot(`, 👋 Привет!
 ❤ Я игровой Bot Gorilla, во мне довольно много развлекательных команд, которые помогут скоротать время и найти новых друзей. Не забудь, @bot_gorilla_v2(подписаться) чтоб не пропускать конкурсы. 
 
 📖 Узнай все мои команды, введи «помощь»
@@ -1169,7 +1169,7 @@ bot(`${message}, 👋 Привет!
 
 		message.user.settings.firstmsg = false;
 		
-		vk.api.messages.send({chat_id: 1,message: `🔥 K нами присоединился игрок:
+		vk.api.messages.send({chat_id: 2 ,message: `🔥 K нами присоединился игрок:
 		 📝 Имя: @id${user_info.id}(${user_info.first_name})
 		 ✅ Я ему присвоил uid: ${message.user.uid}
 
@@ -1257,6 +1257,7 @@ cmd.hear(/^(?:помощь|команды|📚 Помощь|меню|help|comman
 👑 Рейтинг - ваш рейтинг
 ✒ Ник [ник/вкл/выкл]
 🛒 Магазин
+⚔️Клан помощь - команды клана
 ➖ Продать [предмет]
 🔋 Ферма - биткоин ферма
 🤝 Передать [id] [сумма]
@@ -1491,13 +1492,13 @@ cmd.hear(/^(?:профиль|💾 Профиль|проф)$/i, async (message, b
 	let text = ``;
 
 	text += `🔎 ID: ${message.user.uid}\n`;
-	text += `🔥Префикс: ${message.user.prefix}\n`;
+	text += `text += `🔥 Префикс: ${message.user.prefix.toString().replace(/0/gi, "Челик").replace(/1/gi, "🔥Топер").replace(/2/gi, "✨Ангел").replace(/3/gi, "😈Дьявол").replace(/4/gi, "❤Топ тян").replace(/5/gi, "👑Элита")}\n`;
 if(message.user.clanid) text += `⚔ Kлан: ${clans[message.user.clanid].name}\n`;
 	if(message.user.settings.vip == true)text += `🔥 Статус «VIP»\n`;
 	if(message.user.settings.moder == true) text += `💎 Привелегия «Moder»\n`;
 	if(message.user.settings.adm == true) text +=`💻 Привилегия «Администратор»\n`;
-	if(message.user.settings.vlad == true) text += `@id${message.user.id}(👑 Привилегия «Владелец»)\n`;
-	if(message.user.settings.eval == true) text += `@id${message.user.id}(💫 «Создатель»)\n`;
+	if(message.user.settings.vlad == true) text += `👑 Привилегия «Владелец»)\n`;
+	if(message.user.settings.eval == true) text += `✨ Привелегия «System»\n`;
 	text += `💰 Денег: ${utils.sp(message.user.balance)}$\n`;
 	text += `💳 В банке: ${utils.sp(message.user.bank)}$\n`;
 	text += `💽 Биткоинов: ${utils.sp(message.user.btc)}฿\n`;
