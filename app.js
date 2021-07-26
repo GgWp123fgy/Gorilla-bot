@@ -1129,9 +1129,7 @@ updates.on('message', async (message) => {
 
 bot(`, 👋 Привет!
 ❤ Я игровой Bot Gorilla, во мне довольно много развлекательных команд, которые помогут скоротать время и найти новых друзей. Не забудь, @bot_gorilla_v2(подписаться) чтоб не пропускать конкурсы. 
-
 📖 Узнай все мои команды, введи «помощь»
-
 Беседа с ботом: https://vk.me/join/AJQ1d95mlhzn9GrMQfnniWQ/`, 
 		{
 			keyboard:JSON.stringify(
@@ -1172,7 +1170,6 @@ bot(`, 👋 Привет!
 		vk.api.messages.send({chat_id: 2 ,message: `🔥 K нами присоединился игрок:
 		 📝 Имя: @id${user_info.id}(${user_info.first_name})
 		 ✅ Я ему присвоил uid: ${message.user.uid}
-
 		 🌐 Всего игроков: ${users.length}`, random_id: 0}).catch((error) => { console.log(` Ошибка. ${error}`);})
 		 console.log(`+1 чел ${utils.rn(users.length)}`);
 		
@@ -1214,14 +1211,12 @@ const cmd = {
 
 cmd.hear(/^(?:помощь|команды|📚 Помощь|меню|help|commands|cmds|menu|начать|start|@destinybot 📚 Помощь)$/i, async (message, bot) => {
 	await bot(`мои команды:
-
 🍀 Развлекательные:
 🙊 Анекдот
 ↪ Переверни [фраза]
 🔮 Шар [фраза]
 📊 Инфа [фраза]
 ⚖ Выбери [фраза] или [фраза2]
-
 🚀 Игры:
 ⠀⠀🎲 Кубик [1-6]
 ⠀⠀🎰 Казино [сумма]
@@ -1230,26 +1225,20 @@ cmd.hear(/^(?:помощь|команды|📚 Помощь|меню|help|comman
 ⠀⠀🔦 Сейф [случайные 2 цифры] 
 ⠀⠀🍂 Копать
 ⠀⠀🚕 Таксовать
-
 👔 Работа - список работ
 ⠀🔨 Работать
 ⠀❌ Уволиться
-
 💼 Бизнес:
 ⠀⠀📈 Бизнес - статистика
 ⠀⠀💵 Бизнес снять
 ⠀⠀✅ Бизнес улучшить
-
 🌽 Питомцы:
 ⠀⠀🐒 Питомец - информация
 ⠀⠀🐪 Питомец поход
 ⠀⠀🌟 Питомец улучшить
-
-
 🔥 Полезное:
 📠 Реши [пример]
 📊 Курс
-
 💡 Разное:
 📒 Профиль
 💲 Баланс
@@ -1269,7 +1258,6 @@ cmd.hear(/^(?:помощь|команды|📚 Помощь|меню|help|comman
 ⌚ Дата [id] - дата регистрации игрока
 🎁 Донат
 👫 Реферал - деньги за друзей
-
 🆘 Репорт [фраза] - ошибки или пожелания`, );
 {
 			keyboard:JSON.stringify(
@@ -1460,7 +1448,6 @@ cmd.hear(/^(?:анекдот)$/i, async (message, bot) => {
 	let textanek = utils.pick(['Разговариваают два американца:\n — У этих русских не только душа другая. Они и устроены по-другому.\n — ?\n — Я сам слышал как один сказал другому — Одень ты на х@й шапку, а то уши замерзнут.', 'Бывает, борешься за что-то, борешься, а потом в один прекрасный момент понимаешь: «А пошло оно все на х@й! » И жить становится намного проще.', '"А это точно поможет? ", — недоверчиво спрашивала царевна Несмеяна, поднося к губам какую-то самокрутку.', 'Чтобы хоть как-то привлечь внимание школьников, преподавательница написала на доске « Жесть. Смотреть всем».', 'Если Патриарх Кирилл верит в Бога, то почему он ездит в бронированном Мерседесе под охраной ФСО за счет бюджета, а не надеется на заступничество своего небесного начальника?']);
 
 	return bot(`анекдот: 
-
 	${textanek}`)
 });
 
@@ -1680,17 +1667,14 @@ cmd.hear(/^(?:ник)\s(.*)$/i, async (message, bot) => {
 
 cmd.hear(/^(?:магазин)$/i, async (message, bot) => {
 	return bot(`разделы магазина:
-
 🚙 Транспорт:
 ⠀⠀🚗 Машины
 ⠀⠀🛥 Яхты
 ⠀⠀🛩 Самолеты
 ⠀⠀🚁 Вертолеты
-
 🏘 Недвижимость:
 ⠀⠀🏠 Дома
 ⠀⠀🌇 Квартиры
-
 📌 Остальное:
   🐌 Питомцы
 ⠀⠀📱 Телефоны
@@ -1698,7 +1682,6 @@ cmd.hear(/^(?:магазин)$/i, async (message, bot) => {
 ⠀⠀👑 Рейтинг [кол-во] - $250 млн
 ⠀⠀💼 Бизнесы
 ⠀⠀💽 Биткоин [кол-во]
-
 🔎 Для покупки используйте "[категория] [номер]".
 ⠀ ⠀ Например: "${utils.pick(['Телефон 7', 'Машина 1', 'Ферма 2', 'Биткоин 100', 'Рейтинг 10'])}"`);
 });
@@ -1930,7 +1913,6 @@ ${message.user.transport.car === 23 ? '🔹' : '🔸'} 23. Koenigsegg Regera (50
 ${message.user.transport.car === 24 ? '🔹' : '🔸'} 24. Tesla Semi (75.000.000$)
 ${message.user.transport.car === 25 ? '🔹' : '🔸'} 25. Venom GT (125.000.000$)
 ${message.user.transport.car === 26 ? '🔹' : '🔸'} 26. Rolls-Royce (200.000.000$)
-
 Для покупки введите "Машина [номер]"`);
 
 	const sell = cars.find(x=> x.id === Number(message.args[1]));
@@ -1962,7 +1944,6 @@ ${message.user.transport.yacht === 10 ? '🔹' : '🔸'} 10. Wider 165 (85.000.0
 ${message.user.transport.yacht === 11 ? '🔹' : '🔸'} 11. Eclipse (150.000.000$)
 ${message.user.transport.yacht === 12 ? '🔹' : '🔸'} 12. Dubai (300.000.000$)
 ${message.user.transport.yacht === 13 ? '🔹' : '🔸'} 13. Streets of Monaco (750.000.000$)
-
 Для покупки введите "Яхта [номер]"`);
 
 	const sell = yachts.find(x=> x.id === Number(message.args[1]));
@@ -1998,7 +1979,6 @@ ${message.user.transport.airplane === 14 ? '🔹' : '🔸'} 14. C-17A Globemaste
 ${message.user.transport.airplane === 15 ? '🔹' : '🔸'} 15. F-22 Raptor (400.000.000$)
 ${message.user.transport.airplane === 16 ? '🔹' : '🔸'} 16. Airbus 380 Custom (600.000.000$)
 ${message.user.transport.airplane === 17 ? '🔹' : '🔸'} 17. B-2 Spirit Stealth Bomber (1.359.000.000$)
-
 Для покупки введите "Самолет [номер]"`);
 
 	const sell = airplanes.find(x=> x.id === Number(message.args[1]));
@@ -2030,7 +2010,6 @@ ${message.user.transport.helicopter === 10 ? '🔹' : '🔸'} 10. Bell 429WLG (1
 ${message.user.transport.helicopter === 11 ? '🔹' : '🔸'} 11. NHI NH90 (35.000.000$)
 ${message.user.transport.helicopter === 12 ? '🔹' : '🔸'} 12. Kazan Mi-35M (60.000.000$)
 ${message.user.transport.helicopter === 13 ? '🔹' : '🔸'} 13. Bell V-22 Osprey (135.000.000$)
-
 Для покупки введите "Вертолет [номер]"`);
 
 	const sell = helicopters.find(x=> x.id === Number(message.args[1]));
@@ -2064,7 +2043,6 @@ ${message.user.realty.home === 12 ? '🔹' : '🔸'} 12. Дом на Рублё�
 ${message.user.realty.home === 13 ? '🔹' : '🔸'} 13. Личный небоскрёб (7.000.000$)
 ${message.user.realty.home === 14 ? '🔹' : '🔸'} 14. Остров с особняком (12.500.000$)
 ${message.user.realty.home === 15 ? '🔹' : '🔸'} 15. Белый дом (20.000.000$)
-
 Для покупки введите "Дом [номер]"`);
 
 	const sell = homes.find(x=> x.id === Number(message.args[1]));
@@ -2091,7 +2069,6 @@ ${message.user.realty.apartment === 5 ? '🔹' : '🔸'} 5. Четырехком
 ${message.user.realty.apartment === 6 ? '🔹' : '🔸'} 6. Квартира в центре Москвы (1.600.000$)
 ${message.user.realty.apartment === 7 ? '🔹' : '🔸'} 7. Двухуровневая квартира (4.000.000$)
 ${message.user.realty.apartment === 8 ? '🔹' : '🔸'} 8. Квартира с Евроремонтом (6.000.000$)
-
 Для покупки введите "Квартира [номер]"`);
 
 	const sell = apartments.find(x=> x.id === Number(message.args[1]));
@@ -2120,7 +2097,6 @@ ${message.user.misc.phone === 7 ? '🔹' : '🔸'} 7. Xiaomi Mi Mix (50.000$)
 ${message.user.misc.phone === 8 ? '🔹' : '🔸'} 8. Torex FS1 (75.000$)
 ${message.user.misc.phone === 9 ? '🔹' : '🔸'} 9. iPhone X (100.000$)
 ${message.user.misc.phone === 10 ? '🔹' : '🔸'} 10. Мегафон С1 (250.000$)
-
 Для покупки введите "Телефон [номер]"`);
 
 	const sell = phones.find(x=> x.id === Number(message.args[1]));
@@ -2147,7 +2123,6 @@ cmd.hear(/^(?:питомцы)\s?([0-9]+)?$/i, async (message, bot) => {
 🐶 6. Собака (5.000.000.000$)
 🐼 7. Панда (30.000.000.000$)
 🦍 8. Горилла (180.000.000.000$)
-
 🚩Для покупки введите "Питомцы [номер]"`);
 
 	const sell = pets.find(x=> x.id === Number(message.args[1]));
@@ -2240,7 +2215,6 @@ cmd.hear(/^(?:фермы)\s?([0-9]+)?$/i, async (message, bot) => {
 ${message.user.misc.farm === 1 ? '🔹' : '🔸'} 1. 6U Nvidia 2₿/час (20.500.000$)
 ${message.user.misc.farm === 2 ? '🔹' : '🔸'} 2. AntminerS9 10₿/час (100.000.000$)
 ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час (900.000.000$)
-
 Для покупки введите "Фермы [номер] [кол-во]"`);
 
 	const sell = farms.find(x=> x.id === Number(message.args[1]));
@@ -2284,7 +2258,6 @@ cmd.hear(/^(?:фермы 1)\s?([0-9]+)?$/i, async (message, bot) => {
 ${message.user.misc.farm === 1 ? '🔹' : '🔸'} 1. 6U Nvidia 2₿/час (20.500.000$)
 ${message.user.misc.farm === 2 ? '🔹' : '🔸'} 2. AntminerS9 10₿/час (100.000.000$)
 ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час (900.000.000$)
-
 Для покупки введите "Фермы [номер] [кол-во]"`);
 
 	if(message.user.farms >= message.user.farmslimit) return bot(`вы достигли лимита ферм. ${smileerror}`);
@@ -2318,7 +2291,6 @@ cmd.hear(/^(?:фермы 2)\s?([0-9]+)?$/i, async (message, bot) => {
 ${message.user.misc.farm === 1 ? '🔹' : '🔸'} 1. 6U Nvidia 2₿/час (20.500.000$)
 ${message.user.misc.farm === 2 ? '🔹' : '🔸'} 2. AntminerS9 10₿/час (100.000.000$)
 ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час (900.000.000$)
-
 Для покупки введите "Фермы [номер] [кол-во]"`);
 
 	if(message.user.farms >= message.user.farmslimit) return bot(`вы достигли лимита ферм. ${smileerror}`);
@@ -2352,7 +2324,6 @@ cmd.hear(/^(?:фермы 3)\s?([0-9]+)?$/i, async (message, bot) => {
 ${message.user.misc.farm === 1 ? '🔹' : '🔸'} 1. 6U Nvidia 2₿/час (20.500.000$)
 ${message.user.misc.farm === 2 ? '🔹' : '🔸'} 2. AntminerS9 10₿/час (100.000.000$)
 ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час (900.000.000$)
-
 Для покупки введите "Фермы [номер] [кол-во]"`);
 
 	if(message.user.farms >= message.user.farmslimit) return bot(`вы достигли лимита ферм. ${smileerror}`);
@@ -3311,7 +3282,6 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 		vk.api.call("messages.send", {
 		chat_id: 1,
 		message: `😡 Анти-слив система 😡:
-
 		Администратор @id${message.user.id}(${message.user.tag}) - (Выдал опыт ${utils.sp(message.args[2])}) игроку @id${user.id} (ID: ${user.uid})`,
 		random_id: Math.random()
 		});
@@ -3329,7 +3299,7 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 		message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
 		message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
 
-		if(message.user.settings.adm <= 3 return bot(`недостаточно прав, для использования данной команды :>`);
+		if(message.user.settings.adm <= 3) return bot(`недостаточно прав, для использования данной команды :>`);
 		if(!Number(message.args[2])) return;
 		message.args[2] = Math.floor(Number(message.args[2]));
 
@@ -3345,7 +3315,6 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 		vk.api.call("messages.send", {
 		chat_id: 1,
 		message: `😡 Анти-слив система 😡:
-
 		Администратор @id${message.user.id}(${message.user.tag}) - (Выдал энергию ${utils.sp(message.args[2])}) игроку @id${user.id} (ID: ${user.uid})`,
 		random_id: Math.random()
 		});
@@ -3387,7 +3356,6 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 			vk.api.call("messages.send", {
 			chat_id: 1,
 			message: `😡 Анти-слив система 😡:
-
 			Администратор @id${message.user.id}(${message.user.tag}) - (Выдал рейтинг ${utils.sp(message.args[2])}) игроку @id${user.id} (ID: ${user.uid})`,
 			random_id: Math.random()
 			});
@@ -3936,11 +3904,9 @@ cmd.hear(/^(?:клан создать)\s(.*)$/i, async (message, bot) => {
 
     return bot(
       `клан «${name}» успешно создан!
-
 🆔 ID клана: ${clans.number}
 🔥 Создатель клана: [id${message.user.id}|${message.user.tag}]
 💸 Цена за вход: 1.000$
-
 📚 Команды клана: кпомощь`,
       {
         attachment: ``,
@@ -4014,7 +3980,6 @@ cmd.hear(
         user_id: user.id,
         random_id: 0,
         message: `❌ Игрок [id${message.user.id}|${message.user.tag}] покинул клан «${clans[idclan].name}»
-
 		▶ Введите «Оповещения выкл» для отключения всех клановых оповещений.`
       });
     
@@ -4083,7 +4048,6 @@ cmd.hear(/^(?:кзакрыть|клан закрыть)/i, async (message, bot) 
       `🙄`,
       `🤔`
     ])}
-
 	🤑 Открыть: клан открыть`);
   clans[clanid].open = false;
   return bot(`вы закрыли клан, набор участников больше не производится ❌`);
@@ -4116,7 +4080,6 @@ cmd.hear(/^(?:кцена|клан цена)\s(.*)$/i, async (message, bot) => {
       `😏`,
       `🤑`
     ])}
-
 💸 Установить новую цену: клан цена [цена]`);
   if (message.args[1] <= 0)
     return bot(`цена за вход: ${utils.sp(clans[clanid].price)}$ ${utils.pick([
@@ -4127,7 +4090,6 @@ cmd.hear(/^(?:кцена|клан цена)\s(.*)$/i, async (message, bot) => {
       `😏`,
       `🤑`
     ])}
-
 💸 Установить новую цену: клан цена [цена]`);
   if (clans[clanid].users[message.user.uid].level < 2)
     return bot(`вы не создатель/администратор клана. ${errors}`);
@@ -4236,7 +4198,6 @@ cmd.hear(/^(?:вступить|клан вступить|войти|клан в�
         user_id: user.id,
         random_id: 0,
         message: `🗣 Игрок [id${message.user.id}|${message.user.tag}] вступил в клан «${clans[idclan].name}»
-
 	▶ Введите «Оповещения выкл» для отключения всех клановых оповещений.`
       });
   }
@@ -4346,7 +4307,6 @@ cmd.hear(/^(?:клан состав|клан участники|клан у|со
         )}$ | Участник.\n\n`;
     }
     return bot(`участники клана «${clans[clanid].name}» [${clans[clanid].people}/50]:
-
 ${text}`);
   }
 );
@@ -4370,12 +4330,10 @@ message.user.clanid;
   if (clans[clanid].retin < 0) minus = `-`;
 
   return bot(`просмотр клана «${clans[clanid].name}»:
-
 🆔 ID клана: ${clans[clanid].number}
 👥 Участники: ${clans[clanid].people}/50
 💰 Казна клана: ${utils.sp(clans[clanid].balance)}$
 👑 Рейтинг клана: ${minus}${utils.sp(clans[clanid].retin)}
-
 💸 Цена за вход: ${utils.sp(clans[clanid].price)}$${zel}
 🆚 Побед: ${utils.sp(clans[clanid].good)}, поражений: ${utils.sp(clans[clanid].fuflo)}
 ${clans[clanid].open == true ? "🔓" : "🔒"} Тип клана: ${
@@ -4606,15 +4564,10 @@ cmd.hear(
   async (message, bot) => {
     return bot(
       `магазин:
-
 1⃣ Армия (100 единиц) — 300.000.000.000$
 🛒 Купить: армия [кол-во]
-
 2⃣ Щит на сутки — 150.000.000.000$
 🛒 Купить: купить щит
-
-
-
 ❌ Щит пропадает при атаке на любой клан.`,
 
       {
@@ -4680,7 +4633,6 @@ cmd.hear(/^(?:купить щит|🛡 Щит)$/i, async (message, bot) => {
     `😏`,
     `🤑`
   ])}
-
 ❌ Щит пропадает при любой атаке с вашей стороны.`);
 });
 
@@ -4688,7 +4640,6 @@ cmd.hear(
   /^(?:клан помощь|клан помошь|клан помош|«клан помощь»|клан помощ)$/i,
   async (message, bot) => {
     return bot(`команды для клана:
-
 🏹 Мой клан:
 ⠀⠀🔥 Клан
 ⠀⠀💰 Казна
@@ -4698,12 +4649,10 @@ cmd.hear(
 ⠀⠀🛍 Клан магазин
 ⠀⠀🔓 Клан открыть/Клан закрыть
 ⠀⠀❌ Клан удалить
-
 ⚔ Топ клан
 📚 Кпомощь
 🏹 Клан создать
 🔔 Оповещения [вкл/выкл]
-
 👤 Участники:
 ⠀⠀👥 Клан состав
 ⠀⠀🚪 Клан вступить
@@ -4711,9 +4660,7 @@ cmd.hear(
 ⠀⠀⏫ Повысить/Понизить
 ⠀⠀🏃‍♂ Клан кик
 ⠀⠀❌ Покинуть
-
 🅰 Админ в клане может приглашать и исключать игроков, изменять клан, проводить атаки.
-
 📜 Модератор в клане может изменять название, исключать игроков.`);
   }
 );
@@ -4735,31 +4682,26 @@ cmd.hear(
     let id = message.user.uid;
     if (clans[clanid].users[id].level < 1) {
       return bot(`клановые команды:
-
 🔥 Клан — ваш клан
 👥 Клан состав — состав клана
 💸 Казна — пополнить казну
 ⚔ Топ клан — топ кланов
-
 ❌ Покинуть — выход из клана`);
     }
 
     if (clans[clanid].users[id].level == 1) {
       return bot(`клановые команды:
-
 🔥 Клан — ваш клан
 👥 Клан состав — состав клана
 💸 Казна — пополнить казну
 ✒ Клан название — название клана
 🏃‍♂ Клан кик — изгнать соклана
 ⚔ Топ клан — топ кланов
-
 ❌ Покинуть — выход из клана`);
     }
 
     if (clans[clanid].users[id].level == 2) {
       return bot(`клановые команды:
-
 🔥 Клан — ваш клан
 👥 Клан состав — состав клана
 💸 Казна — пополнить казну
@@ -4772,13 +4714,11 @@ cmd.hear(
 🤑 Клан цена — цена за вход
 💪🏻 Атаковать — война
 ⚔ Топ клан — топ кланов
-
 ❌ Покинуть — выход из клана`);
     }
 
     if (clans[clanid].users[id].level == 3) {
       return bot(`клановые команды:
-
 🔥 Клан — ваш клан
 👥 Клан состав — состав клана
 💸 Казна — пополнить казну
@@ -4791,7 +4731,6 @@ cmd.hear(
 🤑 Клан цена — цена за вход
 💪🏻 Атаковать — война
 ⚔ Топ клан — топ кланов
-
 ❌ Удалить клан — удаление клана`);
     }
   }
@@ -4814,7 +4753,6 @@ cmd.hear(
     return bot(`баланс вашего клана: ${utils.sp(
       clans[clanid].balance
     )}$ ${utils.pick([`🤤`, `☺`, `🙂`, `😁`, `😏`, `🤑`])}
-
 💸 Пополнить: казна [сумма]`);
   }
 );
@@ -4848,7 +4786,6 @@ cmd.hear(
       return bot(`баланс вашего клана: ${utils.sp(
         clans[clanid].balance
       )}$ ${utils.pick([`🤤`, `☺`, `🙂`, `😁`, `😏`, `🤑`])}
-
 💸 Пополнить: казна [сумма]`);
     message.args[1] = Math.floor(Number(message.args[1]));
 
@@ -4865,7 +4802,6 @@ cmd.hear(
       return bot(`баланс вашего клана: ${utils.sp(
         clans[clanid].balance
       )}$ ${utils.pick([`🤤`, `☺`, `🙂`, `😁`, `😏`, `🤑`])}
-
 💸 Пополнить: казна [сумма]`);
 
     let id = message.user.uid;
@@ -4883,7 +4819,6 @@ cmd.hear(
         user_id: user.id,
         random_id: 0,
         message: `🗣 Игрок [id${message.user.id}|${message.user.tag}] положил в казну клана «${clans[idclan].name}» ${utils.sp(message.args[1])}$
-
 		▶ Введите «Оповещения выкл» для отключения всех клановых оповещений.`
       });
     }
@@ -4912,7 +4847,6 @@ cmd.hear(/^(?:клан удалить|кудалить)$/i, async (message, bot)
     clans[clanid].topsk = getUnix() + 600000;
     return bot(
       `вы уверены в удалении клана? 🤔
-
 ❌ Введите для удаления: клан удалить`,
       {
         keyboard: JSON.stringify({
@@ -4945,7 +4879,6 @@ cmd.hear(/^(?:армия|армии)$/i, async (message, bot) => {
   if (!clanid)
     return bot(`у вас нет клана ${utils.pick([`😳`, `😒`, `😟`, `🙄`, `🤔`])}`);
   return bot(`армии в вашем клане: ${utils.sp(clans[clanid].zashita)} ⚔
-
 🛍 Купить: армия [кол-во]
 🛒 Магазин: клан магазин`);
 });
@@ -4997,12 +4930,10 @@ cmd.hear(
 🛍 Пример: армия 100`);
     if (!Number(message.args[1]))
       return bot(`армии в вашем клане: ${utils.sp(clans[clanid].zashita)} ⚔
-
 🛍 Купить: армия [кол-во]
 🛒 Магазин: клан магазин`);
     if (message.args[1] <= 0)
       return bot(`армии в вашем клане: ${utils.sp(clans[clanid].zashita)} ⚔
-
 🛍 Купить: армия [кол-во]
 🛒 Магазин: клан магазин`);
 
@@ -5021,7 +4952,6 @@ cmd.hear(
       bot(`вы купили ${utils.sp(message.args[1])} единиц армии за ${utils.sp(
         message.args[1] * pay
       )}$ ⚔
-
 💰 Баланс клана: ${utils.sp(clans[clanid].balance)}$`);
       let user = users.find(x => x.id === clans[clanid].owner)
     if(user.notifications == true){
@@ -5029,7 +4959,6 @@ cmd.hear(
         user_id: user.id,
         random_id: 0,
         message: `🗣 Игрок [id${message.user.id}|${message.user.tag}] положил в казну клана «${clans[clanid].name}» ${utils.sp(message.args[1])}$
-
 		▶ Введите «Оповещения выкл» для отключения всех клановых оповещений.`
       });
     }
@@ -5105,7 +5034,6 @@ cmd.hear(/^(?:повысить|клан повысить|кповысить)$/i,
       ])}`
     );
   return bot(`использование: повысить [ID игрока]
-
 🅰 Админ в клане может приглашать и исключать игроков, изменять клан, проводить атаки.
 📜 Модератор в клане может изменять название, исключать игроков.`);
 });
@@ -5224,7 +5152,6 @@ cmd.hear(/^(?:понизить|клан понизить|кпонизить)$/i,
       ])}`
     );
   return bot(`использование: понизить [ID игрока]
-
 🅰 Админ в клане может приглашать и исключать игроков, изменять клан, проводить атаки.
 📜 Модератор в клане может изменять название, исключать игроков.`);
 });
@@ -5361,7 +5288,6 @@ cmd.hear(
 
     if (clans[clanid].exs > getUnix())
       return bot(`ваша армия слишком устала 😩
-
 	⌚ Новую атаку можно начать через ${unixStampLefta(
         clans[clanid].exs - Date.now()
       )}`);
@@ -5490,7 +5416,6 @@ cmd.hear(
             }», вы потеряли ${utils.sp(resulk)} армии, украдено: ${utils.sp(
               klmoney
             )}$ ✅
-
 🔔 Отписаться от оповещений: «оповещения выкл»`
           });
         }
@@ -5530,7 +5455,6 @@ cmd.hear(
             	message: `⚔ Ваш клан одержал поражение перед «${
               	clans[clanid].name
             }», вы потеряли ${utils.sp(resulkk)} армии ❌
-
 			🔔 Отписаться от оповещений: «оповещения выкл»`
           });
         }
@@ -5620,7 +5544,6 @@ cmd.hear(
             }», вы потеряли ${utils.sp(resulk1)} армии, украдено: ${utils.sp(
               kpmoney
             )}$ ✅
-
 🔔 Отписаться от оповещений: «оповещения выкл»`
           });
         }
@@ -5664,7 +5587,6 @@ cmd.hear(
             }», вы потеряли ${utils.sp(resulkk)} армии и ${utils.sp(
               kpmoney1
             )}$ ❌
-
 🔔 Отписаться от уведомлений: «уведомления выкл»`
           });
         }
@@ -5805,29 +5727,4 @@ text += `\n👜 Ваши кейсы:\n\n`;
 if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1} шт.)\nОткрыть: «Открыть 1»\n\n`;
 if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2} шт.)\nОткрыть: «Открыть 2»\n\n`;
 }
-});
-
-cmd.hear(/^(?:кейс инфо 1)$/i, async (message, bot) => {
-
-return bot(`из "Стандарт кейса" может выпасть:
-
-1⃣ Префиксы. 
-2⃣ Игровая валюта.
-3⃣ Рейтинг.
-4⃣ Премиум Кейс.
-
-🛒 Купить: "кейс 1 [кол-во]"`,
-});
-
-cmd.hear(/^(?:кейс инфо 2)$/i, async (message, bot) => {
-
-return bot(`из "Премиум кейса" может выпасть:
-
-1⃣ Опыт
-2⃣ Игровая валюта.
-3⃣ Рейтинг.
-4⃣ Донат рубли. 
-5⃣Префиксы
-
-🛒 Купить: "кейс 2 [кол-во]"`,
 });
