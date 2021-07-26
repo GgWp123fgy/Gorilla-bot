@@ -1089,12 +1089,7 @@ updates.on('message', async (message) => {
 				pet: 0,
 			},
 			settings: {
-				firstmsg: true,
-				vip: false, 
-				moder: false, 
-				adm: false, 
-				vlad: false, 
-				eval: false, 
+				adm: 0,
 				trade: true,
 				old: false,
 				limit: 100000000000,
