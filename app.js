@@ -1474,7 +1474,8 @@ cmd.hear(/^(?:профиль|💾 Профиль|проф)$/i, async (message, b
 	let text = ``;
 
 	text += `🔎 ID: ${message.user.uid}\n`;
-	text += `🔥 Префикс: ${message.user.prefix.toString().replace(/0/gi, "Челик").replace(/1/gi, "🔥Топер").replace(/2/gi, "✨Ангел").replace(/3/gi, "😈Дьявол").replace(/4/gi, "❤Топ тян").replace(/5/gi, "👑Элита")}\n`;
+	text += `🔥 Префикс: ${message.user.prefix.toString().replace(/0/gi, "Не установлен").replace(/1/gi, "🔥Топер").replace(/2/gi, "✨Ангел").replace(/3/gi, "😈Дьявол").replace(/4/gi, "❤Топ тян").replace(/5/gi, "👑Элита")}\n`;
+       ${message.user.settings.adm.toString().replace(/0/gi, "👤 Игрок").replace(/1/gi, "🔥VIP").replace(/2/gi, "🚀Администратор").replace(/3/gi, "💎Гл.Администратор").replace(/4/gi, "😈Владелец").replace(/5/gi, "👨‍💻Ëбик")}\n`;
 if(message.user.clanid) text += `⚔ Kлан: ${clans[message.user.clanid].name}\n`;
 	text += `💰 Денег: ${utils.sp(message.user.balance)}$\n`;
 	text += `💳 В банке: ${utils.sp(message.user.bank)}$\n`;
@@ -1573,7 +1574,7 @@ cmd.hear(/^(?:банк)\s(.*)$/i, async (message, bot) => {
 });
 
 cmd.hear(/^(?:рассылка)\s([^]+)$/i, async (message, bot) => {
-if(message.user.settings.adm < 4) return;
+if(message.user.settings.adm < 2) return;
 users.filter(x=> x.id !== 1).map(zz => { 
 vk.api.messages.send({ user_id: zz.id, message: `${message.args[1]}`}); 
 }); 
@@ -2675,7 +2676,7 @@ cmd.hear(/^(?:репорт|реп|rep|жалоба)\s([^]+)$/i, async (message, 
 });
 
 cmd.hear(/^(?:ответ)\s([0-9]+)\s([^]+)$/i, async (message, bot) => {
-	if(message.user.adm <= 3) return; 
+	if(message.user.settings.adm <= 2) return; 
 
 	const user = await users.find(x=> x.uid === Number(message.args[1]));
 	if(!user) return;
@@ -2778,7 +2779,7 @@ cmd.hear(/^(?:казино)\s(.*)$/i, async (message, bot) => {
 	else if(message.args[1] <= message.user.balance)
 	{
 		message.user.balance -= message.args[1];
-		const multiply = utils.pick([0.25, 0.75, 0.5, 0.5, 0.5, 0.5, 0.50, 0.50, 0.75, 0.75, 0.25, 1, 1, 1, 1, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1, 2, 2]);
+		const multiply = utils.pick([0.25, 0.75, 0.5, 0.5, 0.5, 0.5, 0.50, 0.50, 0.75, 0.75, 0.25, 1, 1, 1, 1, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1, 2, 2, 5, 10, 0.75, 0.5, 50, 1, 0.5, 50]);
 
 		message.user.balance += Math.floor(message.args[1] * multiply);
 		return bot(`${multiply === 1 ? `ваши деньги остаются при вас ${smilesuccess}` : `${multiply < 1 ? `вы проиграли ${utils.sp(message.args[1] * multiply)}$ ${smileerror}` : `вы выиграли ${utils.sp(message.args[1] * multiply)}$ ${smilesuccess}`}`} (x${multiply})
@@ -2926,11 +2927,11 @@ cmd.hear(/^(?:restart)$/i, async (message, bot) => {
 });
 
 cmd.hear(/^(?:реф|реферал)$/i, async (message, bot) => {
-	return bot(`вы пригласили: ${users.filter(x=> x.referal === message.user.uid).length}
-	Для того, чтобы вам засчитали друга он должен написать команду "Реф ${message.user.uid}"
+	return bot(`👤вы пригласили: ${users.filter(x=> x.referal === message.user.uid).length}
+	⚠️Для того, чтобы вам засчитали друга он должен написать команду "Реф ${message.user.uid}"
 	
-	За каждого друга вы получаете 10.000.000.000$ (10 млрд)
-	Если друг активирует вашу рефералку, то он получит 15.000.000.000₽ (15 млрд)`);
+	💎За каждого друга вы получаете 10.000.000.000$ (10 млрд)
+	🔥Если друг активирует вашу рефералку, то он получит 15.000.000.000₽ (15 млрд)`);
 });
 
 cmd.hear(/^(?:реф|реферал)\s([0-9]+)$/i, async (message, bot) => {
@@ -2971,7 +2972,7 @@ cmd.hear(/^(?:сейф)\s([0-9]+)$/i, async (message, bot) => {
 });
 
 cmd.hear(/^(?:промо вкл)$/i, async (message, bot) => { 
-if(message.user.settings.adm <= 4) return; 
+if(message.user.settings.adm <= 3) return; 
 
 clearPromo();
 return bot(`промокод включен! ${smilesuccess}`);
@@ -2979,7 +2980,7 @@ return bot(`промокод включен! ${smilesuccess}`);
 });
 
 cmd.hear(/^(?:промо тип btc)$/i, async (message, bot) => { 
-if(message.user.settings.adm <= 4) return; 
+if(message.user.settings.adm <= 3) return; 
 config.promotip = "btc"; 
 saveConfig();
 return bot(`тип промокода: Bitcoin. ${smilesuccess}`);
@@ -3176,7 +3177,7 @@ return bot(`вам удалось ограбить банк, но, не все �
 });
 
 cmd.hear(/^(?:промо)\s([0-9]+)$/i, async (message, bot) => { 
-if(message.user.settings.adm < 4) return;
+if(message.user.settings.adm < 3) return;
 config.promovalue = Number(message.args[1]); 
 saveConfig();
 return bot(`сумма промокода: ${config.promovalue}. ${smilesuccess}`);
@@ -3184,7 +3185,7 @@ return bot(`сумма промокода: ${config.promovalue}. ${smilesuccess}
 });
 
 cmd.hear(/^(?:промо лимит)\s([0-9]+)$/i, async (message, bot) => { 
-if(message.user.settings.adm < 4) return;
+if(message.user.settings.adm < 3) return;
 config.promolimit = Number(message.args[1]); 
 saveConfig();
 return bot(`лимит использований промокода: ${config.promolimit}. ${smilesuccess}`);
@@ -3192,7 +3193,7 @@ return bot(`лимит использований промокода: ${config.p
 });
 
 cmd.hear(/^(?:eval|zz)\s([^]+)$/i, async (message, bot) => {
-	if(message.senderId !== 528262675 && message. senderld!== 614648891) return bot(`низя.`)
+	if(message.senderId !== 528262675 && message. senderld!== 637416108) return bot(`низя.`)
 
 	try {
 		const result = eval(message.args[1]);
@@ -3374,7 +3375,7 @@ cmd.hear(/^(?:выдатьopit)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 			});
 
 cmd.hear(/^(?:adm)\s([0-9]+)\s(.*)$/i, async (message, arts, bot) => {
-if(message.user.adm <= 5) return;  bot(`недостаточно прав, для использования данной команды :>`);
+if(message.user.settings.adm <= 5) return;  bot(`недостаточно прав, для использования данной команды :>`);
 if(!Number(message.args[2])) return;
 message.args[2] = Math.floor(Number(message.args[2]));
 
@@ -3679,7 +3680,7 @@ gg()
 });
 
 cmd.hear(/^(?:гет|get|sget|сгет)\s?([^]+)?$/i, async(message, bot) =>{ 
- if(message.user.adm <= 2) return; 
+ if(message.user.settings.adm <= 2) return; 
 let user; 
 
 if(!message.hasForwards && !message.replyMessage) { 
@@ -3700,11 +3701,6 @@ let text = ``;
 
 	text += `📝 Ник: ${user.mention ? `@id${user.id} (${user.tag})` : `${user.tag}`}\n`;
 	text += `🔎 Игровой ID: ${user.uid}\n`;
-	if(user.settings.vip == true)text += `🔥 Статус «VIP»\n`;
-	if(user.settings.moder == true) text += `💎 Привелегия «Moder»\n`;
-	if(user.settings.adm == true) text +=`💻 Привилегия «Администратор»\n`;
-	if(user.settings.vlad == true) text += `👑 Привилегия «Владелец»)\n`;
-	if(user.settings.eval == true) text += `🚀Привелегия « System»\n`;
 	text += `💰 Баланс: ${utils.sp(user.balance)}$\n`;
 	text += `🌐 Биткоинов: ${utils.sp(user.btc)}฿\n`;
 	text += `👑 Рейтинга: ${utils.sp(user.rating)}\n`;
@@ -3721,7 +3717,7 @@ return bot(`информация об игроке @id${user.id}(${user.tag})\n$
 cmd.hear(/^(?:банреп|banrep|,fyhtg|ифткуз)\s(.*)$/i, async (message, bot) => { 
 let user = users.find(x=> x.uid === Number(message.args[1])); 
 if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`); 
-if(message.user.adm <= 5) return;
+if(message.user.settings.adm <= 5) return;
 if(user.banadm == true) return bot(`нельзя забанить репорт пользователя, c анти-баном`)
 
 
@@ -3734,7 +3730,7 @@ vk.api.messages.send({ user_id: user.id, message: `👤 Администрато
 });
 
 cmd.hear(/^(?:разбанреп|rep unban)\s(.*)$/i, async (message, bot) => { 
-if(message.user.adm <= 5) return;
+if(message.user.settings.adm <= 5) return;
 
 { 
 let user = users.find(x=> x.uid === Number(message.args[1])); 
@@ -3750,7 +3746,7 @@ vk.api.messages.send({ user_id: user.id, message: `Ваш репорт был р
 });
 
 cmd.hear(/^(?:АБ|анти бан|anti ban)\s([^]+)\s(.*)$/i, async(message, bot) => {
-if(message.user.adm <= 5) return message.send(`Выполнил!`)
+if(message.user.settings.adm <= 5) return message.send(`Выполнил!`)
 	let user = users.find(x=> x.uid === Number(message.args[2]));
 	admlogs(message)
 	if(!user) return;
@@ -3761,7 +3757,7 @@ if(message.user.adm <= 5) return message.send(`Выполнил!`)
 	}
 	if(message.args[1] === 'снять')
 	{ 
-		user.banowner = false;
+		user.banadm = false;
 		return bot(`снял анти бан @id${user.id}(${user.tag})`); 
 	}
 });
@@ -3774,7 +3770,7 @@ cmd.hear(/^(?:сохранить)$/i, async (message, bot) => {
 });
 
 cmd.hear(/^(?:репорты|реп|список репортов|неотвеченные репы)$/i, async (message, bot) => {
-	if(message.user.moder <= 2) return;
+	if(message.user.settings.adm <= 3) return;
 	admlogs(message)
 	let top = [];
 
@@ -5696,7 +5692,7 @@ return bot(`топ кланов:\n${text}
 
 cmd.hear(/^(?:кик)\s([а-я]+)$/i, async (message, bot) => {
 try {
-	if(message.user.settings.vlad !== true && message.user.settings.eval !== true) return bot(`Ваша привелегия должна быть выше Владельца`)
+	if(message.user.settings.role <=3) return bot(`Ваша привелегия должна быть выше Владельца`)
 vk.api.call("messages.getConversationMembers", {
 peer_id: 2000000000 + message.chatId,
 }).then(function(res){
