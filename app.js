@@ -5922,8 +5922,9 @@ cmd.hear(/^(?:Для бесед)$/i, async(message, bot) => {
 		
 		⚠️Для администраторов:
 		
-		
-		1⃣Кик - кикнуть игрока из беседы.`) 
+		1⃣Ббан - выдача блокировки в беседе. 
+		2⃣Кик - кикнуть игрока из беседы. 
+		3⃣Мут- выдать молчанку игроку. `) 
 
 });
 
@@ -5941,110 +5942,6 @@ cmd.hear(/^(?:Рп|рп команды)$/i, async (message, bot) => {
 	💊Отравить [перессланое сообщение] - отравить игрока.`) 
 });
 
-cmd.hear(/^(?:Поцеловать|kiss)\s([^]+)$/i, async (message, args, bot) => { 
-	let user = users.find(x=> x.id === message.replyMessage.senderId)
-	if(message.replyMessage){
-		if(!message.args[1]){
-			return message.send(`😘 @id${message.user.id}(${message.user.tag}) поцеловал @id${user.id}(${user.tag})`)
-		}
-		return message.send(`😘 @id${message.user.id}(${message.user.tag}) поцеловал ${message.args[1]} @id${user.id}(${user.tag})`) 
-	} else { 
-		return message.send(`Перешлите сообщение кого хотите поцеловать`)
-	} 
- 
-});
-
-cmd.hear(/^(?:Ударить)\s([^]+)$/i, async (message, args, bot) => { 
-	let user = users.find(x=> x.id === message.replyMessage.senderId)
-	if(message.replyMessage){
-		if(!message.args[1]){
-			return message.send(`👊 @id${message.user.id}(${message.user.tag}) ударил @id${user.id}(${user.tag})`)
-		}
-		return message.send(`👊 @id${message.user.id}(${message.user.tag}) ударил ${message.args[1]} @id${user.id}(${user.tag})`) 
-	} else { 
-		return message.send(`Перешлите сообщение кого хотите ударить`)
-	} 
- 
-});
-
-cmd.hear(/^(?:Выебать|sex)\s([^]+)$/i, async (message, args, bot) => { 
-	let user = users.find(x=> x.id === message.replyMessage.senderId)
-	if(message.replyMessage){
-		if(!message.args[1]){
-			return message.send(`🙀 @id${message.user.id}(${message.user.tag}) выеб@л @id${user.id}(${user.tag})`)
-		}
-		return message.send(`🙀 @id${message.user.id}(${message.user.tag}) выеб@л ${message.args[1]} @id${user.id}(${user.tag})`) 
-	} else { 
-		return message.send(`Перешлите сообщение кого хотите выеб@ть`)
-	} 
- 
-});
-
-cmd.hear(/^(?:Позвонить)\s([^]+)$/i, async (message, args, bot) => { 
-	let user = users.find(x=> x.id === message.replyMessage.senderId)
-	if(message.replyMessage){
-		if(!message.args[1]){
-			return message.send(`🤙 @id${message.user.id}(${message.user.tag}) позвонил @id${user.id}(${user.tag})`)
-		}
-		return message.send(`🤙 @id${message.user.id}(${message.user.tag}) позвонил ${message.args[1]} @id${user.id}(${user.tag})`) 
-	} else { 
-		return message.send(`Перешлите сообщение кому хотите позвонить`)
-	} 
- 
-});
-
-cmd.hear(/^(?:Обнять)\s([^]+)$/i, async (message, args, bot) => { 
-	let user = users.find(x=> x.id === message.replyMessage.senderId)
-	if(message.replyMessage){
-		if(!message.args[1]){
-			return message.send(`🤗 @id${message.user.id}(${message.user.tag}) обнял @id${user.id}(${user.tag})`)
-		}
-		return message.send(`🤗 @id${message.user.id}(${message.user.tag}) обнял ${message.args[1]} @id${user.id}(${user.tag})`) 
-	} else { 
-		return message.send(`Перешлите сообщение кого хотите обнять`)
-	} 
- 
-});
-
-cmd.hear(/^(?:Убить)\s([^]+)$/i, async (message, args, bot) => { 
-	let user = users.find(x=> x.id === message.replyMessage.senderId)
-	if(message.replyMessage){
-		if(!message.args[1]){
-			return message.send(`🔪 @id${message.user.id}(${message.user.tag}) убил @id${user.id}(${user.tag})`)
-		}
-		return message.send(`🔪 @id${message.user.id}(${message.user.tag}) убил ${message.args[1]} @id${user.id}(${user.tag})`) 
-	} else { 
-		return message.send(`Перешлите сообщение кого хотите убить`)
-	} 
- 
-});
-
-cmd.hear(/^(?:расстрелять)\s([^]+)$/i, async (message, args, bot) => { 
-	let user = users.find(x=> x.id === message.replyMessage.senderId)
-	if(message.replyMessage){
-		if(!message.args[1]){
-			return message.send(`🔫 @id${message.user.id}(${message.user.tag}) расстрелял @id${user.id}(${user.tag})`)
-		}
-		return message.send(`🔫 @id${message.user.id}(${message.user.tag}) расстрелял${message.args[1]} @id${user.id}(${user.tag})`) 
-	} else { 
-		return message.send(`Перешлите сообщение кого хотите расстрелять`)
-	} 
- 
-});
-
-cmd.hear(/^(?:Отравить)\s([^]+)$/i, async (message, args, bot) => { 
-	let user = users.find(x=> x.id === message.replyMessage.senderId)
-	if(message.replyMessage){
-		if(!message.args[1]){
-			return message.send(`💊 @id${message.user.id}(${message.user.tag}) отравил @id${user.id}(${user.tag})`)
-		}
-		return message.send(`💊 @id${message.user.id}(${message.user.tag}) отравил ${message.args[1]} @id${user.id}(${user.tag})`) 
-	} else { 
-		return message.send(`Перешлите сообщение кого хотите отравить`)
-	} 
- 
-});
-
-cmd.hear(/^(?:Роль|моя роль)$/i, async (message, bot) => {
-	return message.send(`👑Ваша роль @id${message.user.id(${message.user.role.toString().replace(/1/gi, "Участник").replace(/2/give, "Модератор").replace(/3/gi,"Ст.модератор").replace(/4/gi, "Администратор").replace(/5/gi, "Ст.Администратор").replace(/6/gi, "Создатель");
+cmd.hear(/^(?:Роль)$/i, async (message, bot) => {
+       return message.send(`👑Ваша роль: @id${message.user.id}(${message.user.role.toString().replace(/1/gi, "Участник").replace(/2/gi, "Модератор").replace(/3/gi, " Администратор").replace(/4/gi, "Создатель"`);
 });
