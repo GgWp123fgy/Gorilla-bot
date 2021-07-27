@@ -5732,13 +5732,13 @@ cmd.hear(/^(?:снять)\s([^]+)\s([^]+)$/i, async(message) => {
 		user.settings.adm = 0
 	return message.send(`снял с игрока @id${user.id}(${user.tag}) статус вип`)
 	}
-	if(massage.user.adm ! == 4) return;
+	if(massage.user.adm !== 4) return;
 	let user = users. find(x=> x. uid === Number(messgae.args[1]))
 	if(message.args[2] == ' адм'){
 		user.settings.adm = 0
 		return message.send(`снял с игрока @id${user.id}(${user.tag}) статус Администиатора`)
 	}
-	if(massage.user.adm ! == 5) return;
+	if(massage.user.adm !== 5) return;
 	let user = users. find(x=> x. uid === Number(messgae.args[1]))
 	if(message.args[2] == 'гл.админ'){
 		user.settings.adm = 0
@@ -5836,7 +5836,7 @@ cmd.hear(/^(?:\+кланрейтинг|+крейт)\s([0-9]+)\s([0-9]+)\s([0-9]+
 	return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${message.args[2]} побед и ${message.args[3]} поражений`)
 })
 cmd.hear(/^(?:\-кланрейтинг|-крейт)\s([0-9]+)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== true && message.user.settings.owner !== true && message.user.settings.eval !== true) return;
+	if(message.user.settings.adm !== 4) return;
 	let clan = clans[Number(message.args[1])]
 	clan.good -= Number(message.args[2])
 	clan.fuflo -= Number(message.args[3])
