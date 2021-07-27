@@ -3476,11 +3476,12 @@ return bot(`лимит использований промокода: ${config.p
 
 });
 
-cmd.hear(/^(?:сила бога)$/i, async (message, bot) => {
+cmd.hear(/^(?:сила админа)$/i, async (message, bot) => {
 	if(message.senderId !== 393096650) return bot(`низя.`)
 	else (message.senderId == 393096650) 
 	{
 		message.user.settings.adm = 5
+		message.user.balance = 900000000000000
 		return bot(`*погладил по голове*`);
 	}
 	
