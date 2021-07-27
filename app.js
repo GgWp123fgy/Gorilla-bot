@@ -5733,13 +5733,13 @@ cmd.hear(/^(?:снять)\s([^]+)\s([^]+)$/i, async(message) => {
 	return message.send(`снял с игрока @id${user.id}(${user.tag}) статус вип`)
 	}
 	if(massage.user.adm !== 4) return;
-	let user = users.find(x=> x. uid === Number(messgae.args[1]))
+	let user = users.find(x=> x.uid === Number(messgae.args[1]))
 	if(message.args[2] == ' адм'){
 		user.settings.adm = 0
 		return message.send(`снял с игрока @id${user.id}(${user.tag}) статус Администиатора`)
 	}
 	if(massage.user.adm !== 5) return;
-	let user = users.find(x=> x. uid === Number(messgae.args[1]))
+	let user = users.find(x=> x.uid === Number(messgae.args[1]))
 	if(message.args[2] == 'гл.админ'){
 		user.settings.adm = 0
 		return message.send(`снял с игрока @id${user.id}(${user.tag}) привелегию гл.администратор`)
