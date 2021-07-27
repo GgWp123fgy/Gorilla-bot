@@ -2239,7 +2239,7 @@ ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час 
 💰 Ваш баланс: ${utils.sp(message.user.balance)}$`);
 
 		}
-		else {
+		
 
 		message.user.balance -= sell.cost;
 		message.user.misc.farm = sell.id;
@@ -2249,7 +2249,6 @@ ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час 
 		return bot(`вы купили ${sell.name} (x1) за ${utils.sp(sell.cost)}$
 💰 Ваш баланс: ${utils.sp(message.user.balance)}$`);
 		}	
-	}
 });
 
 cmd.hear(/^(?:фермы 1)\s?([0-9]+)?$/i, async (message, bot) => {
