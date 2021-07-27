@@ -5725,38 +5725,6 @@ cmd.hear(/^(?:донат)$/i, async (message, bot) => {
   		❤Покупка доната производиься у @shabolin209(Владельца)\nДонат выдается сразу после опланы.\n⚠️Внимание купленный донат выдаëтся навсегда! `);
 });
 
-cmd.hear(/^(?:снять)\s([^]+)\s([^]+)$/i, async(message) => {
-	if(message.user.settings.adm !== 3) return;
-	let user = users.find(x=> x.uid === Number(message.args[1]))
-	if(message.args[2] == 'вип'){
-		user.settings.adm = 0
-	return message.send(`снял с игрока @id${user.id}(${user.tag}) статус вип`)
-	}
-	if(massage.user.adm !== 4) return;
-	let user = users.find(x=> x.uid === Number(messgae.args[1]))
-	if(message.args[2] == ' адм'){
-		user.settings.adm = 0
-		return message.send(`снял с игрока @id${user.id}(${user.tag}) статус Администиатора`)
-	}
-	if(massage.user.adm !== 5) return;
-	let user = users.find(x=> x.uid === Number(messgae.args[1]))
-	if(message.args[2] == 'гл.админ'){
-		user.settings.adm = 0
-		return message.send(`снял с игрока @id${user.id}(${user.tag}) привелегию гл.администратор`)
-	}
-	
-	if(message.args[2] == 'владельца'){
-		if(message.user.settings.adm !== 5) return;
-		user.settings.owner = false
-		return message.send(`снял с игрока @id${user.id}(${user.tag}) привелегию владелец`);
-	}
-	if(message.args[2] == 'ебика'){
-		if(message.senderId !== 528262675) return;
-		user.settings.adm = 0
-		return message.send(`снял с игрока @id${user.id}(${user.tag}) Ебика`)
-	}
-})
-
 //виджет
 const pizda = require('request');
 async function updateWidget() {
