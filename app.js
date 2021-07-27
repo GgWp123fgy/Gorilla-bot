@@ -5725,43 +5725,6 @@ cmd.hear(/^(?:донат)$/i, async (message, bot) => {
   		❤Покупка доната производиься у @shabolin209(Владельца)\nДонат выдается сразу после опланы.\n⚠️Внимание купленный донат выдаëтся навсегда!`) 
 });
 
-//виджет
-const pizda = require('request');
-async function updateWidget() {
-let tops = []
-for (i = 0; i < 200000; i++){
-
-	if(users[i]){tops.push({id: i, idvk: users[i].id, lvl: users[i].rating});
-}
-}
-tops.sort(function(a, b) {if (b.lvl > a.lvl) return 1; if (b.lvl < a.lvl) return -1; return 0})
-
-let script = {
-	title: '👑Лучшие игроки бота👑', 
-	title_url: "vk.com/club206063289", 
-	head: [{text: '👤Ник'}, 
-	{text: '👑 Рейтинг', align: 'right'},
-	{text: '💰 Баланс', align: 'right'}], 
-	body: [], 
-	more: "Играть с ботом", more_url: "vk.me/club206063289"}
-for (let g = 0; g < 10; g++) {
-	if (tops.length > g)
-		{script.body.push([{icon_id: `id${tops[g].idvk}`,
-		text: `${users[tops[g].id].tag}`, 
-		url: `vk.com/id${tops[g].idvk}`}, 
-		{text: `${utils.sp(users[tops[g].id].rating)}👑`},
-		{text: `${utils.sp(users[tops[g].id].balance)}$`}])}}
-pizda.post({url: 'https://api.vk.com/method/appWidgets.update', 
-	form: {type: 'table', 
-	access_token: 'token', 
-	code: `return ${JSON.stringify(script)};`, v: '5.95'}},
-function(err, resp, body) {console.log(body)})
-console.log("Виджет обновлён!")
-}
-updateWidget()
-setInterval(updateWidget, 300000)
-
-
 cmd.hear(/^(?:\/пост)\s([^]+)$/i, async (message, bot) => {
 	if(message.user.settings.adm !== 5) return;
 
