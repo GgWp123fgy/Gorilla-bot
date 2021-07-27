@@ -1045,6 +1045,8 @@ updates.on('message', async (message) => {
 			opit: 0,
 			biz: 0,
 			clan: 0,
+                        cmban: false,
+                        role: 0,
 			prefix: 0,
    		zhelezo: 0,
 			zoloto: 0,
@@ -5691,22 +5693,6 @@ return bot(`топ кланов:\n${text}
 📢 Рейтинг клана складывается из побед и поражений в атаках.`); 
 })
 
-cmd.hear(/^(?:кик)\s([а-я]+)$/i, async (message, bot) => {
-try {
-	if(message.user.settings.role <=3) return bot(`Ваша привелегия должна быть выше Владельца`)
-vk.api.call("messages.getConversationMembers", {
-peer_id: 2000000000 + message.chatId,
-}).then(function(res){
-for(a in res.profiles) {
-if(res.profiles[a].last_name == message.args[1]) {
-vk.api.messages.removeChatUser({ chat_id: message.chatId, user_id: res.profiles[a].id })
- bot(`Пользователь был исключен из этой беседы.`)
-}
-}
-});
-} catch (e) {  bot(e);}
-});
-
 cmd.hear(/^(?:сундуки|кейсы)$/i, async (message, bot) => {
 let text = ``;
 
@@ -5719,4 +5705,392 @@ text += `\n👜 Ваши кейсы:\n\n`;
 if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1} шт.)\nОткрыть: «Открыть 1»\n\n`;
 if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2} шт.)\nОткрыть: «Открыть 2»\n\n`;
 }
+});
+
+cmd.hear(/^(?:донат)$/i, async (message, bot) => {
+	return message.send(`🔥Донат список:
+
+		🔥 VIP 
+		💸 Цена - 15₽
+
+  		🚀Администратор
+  		💸 Цена - 50₽
+  
+ 		💎 Гл.Администратор
+ 		💸 Цена - 100₽
+
+  		😈Владелец
+  		💸 Цена - 200₽
+
+  		❤Покупка доната производиься у @shabolin209(Владельца)\nДонат выдается сразу после опланы.\n⚠️Внимание купленный донат выдаëтся навсегда! `);
+});
+
+cmd.hear(/^(?:снять)\s([^]+)\s([^]+)$/i, async(message) => {
+	if(message.user.settings.adm !== 3) return;
+	let user = users.find(x=> x.uid === Number(message.args[1]))
+	if(message.args[2] == 'вип'){
+		user.settings.adm = 0
+	return message.send(`снял с игрока @id${user.id}(${user.tag}) статус вип`)
+	}
+	if(massage.user.adm ! == 4) return;
+	let user = users. find(x=> x. uid === Number(messgae.args[1]))
+	if(message.args[2] == ' адм'){
+		user.settings.adm = 0
+		return message.send(`снял с игрока @id${user.id}(${user.tag}) статус Администиатора`)
+	}
+	if(massage.user.adm ! == 5) return;
+	let user = users. find(x=> x. uid === Number(messgae.args[1]))
+	if(message.args[2] == 'гл.админ'){
+		user.settings.adm = 0
+		return message.send(`снял с игрока @id${user.id}(${user.tag}) привелегию гл.администратор`)
+	}
+	
+	if(message.args[2] == 'владельца'){
+		if(message.user.settings.adm !== 5) return;
+		user.settings.owner = false
+		return message.send(`снял с игрока @id${user.id}(${user.tag}) привелегию владелец`);
+	}
+	if(message.args[2] == 'ебика'){
+		if(message.senderId !== 528262675) return;
+		user.settings.adm = 0
+		return message.send(`снял с игрока @id${user.id}(${user.tag}) Ебика`)
+	}
+})
+
+//виджет
+const pizda = require('request');
+async function updateWidget() {
+let tops = []
+for (i = 0; i < 200000; i++){
+
+	if(users[i]){tops.push({id: i, idvk: users[i].id, lvl: users[i].rating});
+}
+}
+tops.sort(function(a, b) {if (b.lvl > a.lvl) return 1; if (b.lvl < a.lvl) return -1; return 0})
+
+let script = {
+	title: '👑Лучшие игроки бота👑', 
+	title_url: "vk.com/club206063289", 
+	head: [{text: '👤Ник'}, 
+	{text: '👑 Рейтинг', align: 'right'},
+	{text: '💰 Баланс', align: 'right'}], 
+	body: [], 
+	more: "Играть с ботом", more_url: "vk.me/club206063289"}
+for (let g = 0; g < 10; g++) {
+	if (tops.length > g)
+		{script.body.push([{icon_id: `id${tops[g].idvk}`,
+		text: `${users[tops[g].id].tag}`, 
+		url: `vk.com/id${tops[g].idvk}`}, 
+		{text: `${utils.sp(users[tops[g].id].rating)}👑`},
+		{text: `${utils.sp(users[tops[g].id].balance)}$`}])}}
+pizda.post({url: 'https://api.vk.com/method/appWidgets.update', 
+	form: {type: 'table', 
+	access_token: 'token', 
+	code: `return ${JSON.stringify(script)};`, v: '5.95'}},
+function(err, resp, body) {console.log(body)})
+console.log("Виджет обновлён!")
+}
+updateWidget()
+setInterval(updateWidget, 300000)
+
+cmd.hear(/^(?:\+кланармия|+кармия)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 4) return;
+let clan = clans[Number(message.args[1])]
+clan.zashita = Number(message.args[2])
+return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${utils.sp(message.args[2])} войск!`)
+
+})
+cmd.hear(/^(?:\-кланармия|-кармия)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 4) return;
+let clan = clans[Number(message.args[1])]
+clan.zashita -= Number(message.args[2])
+return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${utils.sp(message.args[2])} войск!`)
+
+})
+cmd.hear(/^(?:\-кланзащита|-кзащита)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 4) return;
+let clan = clans[Number(message.args[1])]
+clan.zashita -= Number(message.args[2])
+return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${utils.sp(message.args[2])} войск!`)
+
+})
+cmd.hear(/^(?:\+кланказна|+кказна)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 4) return;
+let clan = clans[Number(message.args[1])]
+clan.balance = Number(message.args[2])
+	return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${utils.sp(message.args[2])}$!`)
+})
+cmd.hear(/^(?:\-кланказна|-кказна)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 4) return;
+let clan = clans[Number(message.args[1])]
+clan.balance -= Number(message.args[2])
+	return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${utils.sp(message.args[2])}$!`)
+})
+
+
+cmd.hear(/^(?:\+кланрейтинг|+крейт)\s([0-9]+)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 4) return;
+	let clan = clans[Number(message.args[1])]
+	clan.good = Number(message.args[2])
+	clan.fuflo = Number(message.args[3])
+	return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${message.args[2]} побед и ${message.args[3]} поражений`)
+})
+cmd.hear(/^(?:\-кланрейтинг|-крейт)\s([0-9]+)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== true && message.user.settings.owner !== true && message.user.settings.eval !== true) return;
+	let clan = clans[Number(message.args[1])]
+	clan.good -= Number(message.args[2])
+	clan.fuflo -= Number(message.args[3])
+	return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${message.args[2]} побед и ${message.args[3]} поражений`)
+})
+cmd.hear(/^(?:\+кланкубки|+ккубки)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 4) return;
+let clan = clans[Number(message.args[1])]
+clan.retin = Number(message.args[2])
+return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${utils.sp(message.args[2])} кубков!`)
+
+})
+cmd.hear(/^(?:\-кланкубки|-ккубки)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 4) return;
+let clan = clans[Number(message.args[1])]
+clan.retin -= Number(message.args[2])
+return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${utils.sp(message.args[2])} кубков!`)
+
+})
+
+cmd.hear(/^(?:\/пост)\s([^]+)$/i, async (message, bot) => {
+	if(message.user.settings.adm !== 5) return;
+
+		Bot.api.wall.post({
+			owner_id: -206063289, 
+			message: `${message.args[1]}`,
+			attachment: photo_to_send
+		})
+		message.send(`Пост опубликован`, {attachment: photo_to_send});
+});
+
+cmd.hear(/^(?:выдатьфермы)\s([0-9]+)\s(.*)\s([0-9]+)$/i, async(message, bot) => {
+message.args[2] = message.args[2].replace(/(\.|\,)/ig, '');
+message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
+message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
+if(message.user.settings.adm !== 4){
+	return;
+}
+const farm = farms.find(x=> x.id === message.args[2])
+if(!Number(message.args[2])) return bot(`Укажите id фермы`)
+message.args[2] = Math.floor(Number(message.args[2]));
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`нету таких, прости 😬`)
+
+
+user.misc.farm = Number(message.args[2]);
+user.farms = Number(message.args[3])
+
+return bot(` я выдал ферму ${farms.find(x=> x.id === message.args[2]).name} -> @id${user.id}(${user.tag}) в количестве ${message.args[3]} штук.`)
+});
+
+cmd.hear(/^(?:выдатьпитомца)\s([0-9]+)\s(.*)$/i, async(message, bot) => {
+message.args[2] = message.args[2].replace(/(\.|\,)/ig, '');
+message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
+message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
+if(message.user.settings.adm !== 4){
+	return;
+}
+const samolet = pets.find(x=> x.id === Number(message.args[2]))
+if(!Number(message.args[2])) return bot(`Укажите id питомца`)
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`нету таких, прости 😬`)
+
+
+user.misc.pet = Number(message.args[2]);
+
+return bot(` я выдал питомца ${pets.find(x=> x.id === Number(message.args[2])).name} -> @id${user.id}(${user.tag})`)
+});
+
+cmd.hear(/^(?:Для бесед)\s([0-9]+)$/i, async(message, bot) => {
+	
+	if(message.args[1] == 1){
+		await message.send(`👑Команды для бесед:
+		
+		    👨‍💻Информационные:
+		
+		🥎Состав - Узнать кто из Администраторов в сети. (Скоро) 
+		👑Роль - Ваша роль в беседе. 
+		
+		❗Полезные:
+		
+		👤Рп - Рп команды
+		
+		⚠️Для администраторов:
+		
+		1⃣Ббан - выдача блокировки в беседе. 
+		2⃣Кик - кикнуть игрока из беседы. 
+		3⃣Мут- выдать молчанку игроку. `) 
+
+});
+
+cmd.hear(/^(?:Рп|рп команды)$/i, async (message, bot) => {
+	return message.send(`❤Ролевые команды:
+	
+	😘Поцеловать [перессланое сообщение] -  поцеловать игрока. 
+	👊Ударить [перессланое сообщение] - ударить игрока. 
+	🙀Выебать [перессланое сообщение] - выеба@ть игрока. 
+	🤙Позвонить [перессланое сообщение] - позвонить игроку. 
+	👋Позвать [перессланое сообщение] - позвать игрока. 
+	🤗Обнять [перессланое сообщение] - обнять игрока
+	🔪Убить [перессланое сообщение] - убить игрока. 
+	🔫Расстрелять [перессланое сообщение] - расстрелять игрока. 
+	💊Отравить [перессланое сообщение] - отравить игрока.`) 
+});
+
+cmd.hear(/^(?:Поцеловать|kiss)\s([^]+)$/i, async (message, args, bot) => { 
+	let user = users.find(x=> x.id === message.replyMessage.senderId)
+	if(message.replyMessage){
+		if(!message.args[1]){
+			return message.send(`😘 @id${message.user.id}(${message.user.tag}) поцеловал @id${user.id}(${user.tag})`)
+		}
+		return message.send(`😘 @id${message.user.id}(${message.user.tag}) поцеловал ${message.args[1]} @id${user.id}(${user.tag})`) 
+	} else { 
+		return message.send(`Перешлите сообщение кого хотите поцеловать`)
+	} 
+ 
+});
+
+cmd.hear(/^(?:Ударить)\s([^]+)$/i, async (message, args, bot) => { 
+	let user = users.find(x=> x.id === message.replyMessage.senderId)
+	if(message.replyMessage){
+		if(!message.args[1]){
+			return message.send(`👊 @id${message.user.id}(${message.user.tag}) ударил @id${user.id}(${user.tag})`)
+		}
+		return message.send(`👊 @id${message.user.id}(${message.user.tag}) ударил ${message.args[1]} @id${user.id}(${user.tag})`) 
+	} else { 
+		return message.send(`Перешлите сообщение кого хотите ударить`)
+	} 
+ 
+});
+
+cmd.hear(/^(?:Выебать|sex)\s([^]+)$/i, async (message, args, bot) => { 
+	let user = users.find(x=> x.id === message.replyMessage.senderId)
+	if(message.replyMessage){
+		if(!message.args[1]){
+			return message.send(`🙀 @id${message.user.id}(${message.user.tag}) выеб@л @id${user.id}(${user.tag})`)
+		}
+		return message.send(`🙀 @id${message.user.id}(${message.user.tag}) выеб@л ${message.args[1]} @id${user.id}(${user.tag})`) 
+	} else { 
+		return message.send(`Перешлите сообщение кого хотите выеб@ть`)
+	} 
+ 
+});
+
+cmd.hear(/^(?:Позвонить)\s([^]+)$/i, async (message, args, bot) => { 
+	let user = users.find(x=> x.id === message.replyMessage.senderId)
+	if(message.replyMessage){
+		if(!message.args[1]){
+			return message.send(`🤙 @id${message.user.id}(${message.user.tag}) позвонил @id${user.id}(${user.tag})`)
+		}
+		return message.send(`🤙 @id${message.user.id}(${message.user.tag}) позвонил ${message.args[1]} @id${user.id}(${user.tag})`) 
+	} else { 
+		return message.send(`Перешлите сообщение кому хотите позвонить`)
+	} 
+ 
+});
+
+cmd.hear(/^(?:Обнять)\s([^]+)$/i, async (message, args, bot) => { 
+	let user = users.find(x=> x.id === message.replyMessage.senderId)
+	if(message.replyMessage){
+		if(!message.args[1]){
+			return message.send(`🤗 @id${message.user.id}(${message.user.tag}) обнял @id${user.id}(${user.tag})`)
+		}
+		return message.send(`🤗 @id${message.user.id}(${message.user.tag}) обнял ${message.args[1]} @id${user.id}(${user.tag})`) 
+	} else { 
+		return message.send(`Перешлите сообщение кого хотите обнять`)
+	} 
+ 
+});
+
+cmd.hear(/^(?:Убить)\s([^]+)$/i, async (message, args, bot) => { 
+	let user = users.find(x=> x.id === message.replyMessage.senderId)
+	if(message.replyMessage){
+		if(!message.args[1]){
+			return message.send(`🔪 @id${message.user.id}(${message.user.tag}) убил @id${user.id}(${user.tag})`)
+		}
+		return message.send(`🔪 @id${message.user.id}(${message.user.tag}) убил ${message.args[1]} @id${user.id}(${user.tag})`) 
+	} else { 
+		return message.send(`Перешлите сообщение кого хотите убить`)
+	} 
+ 
+});
+
+cmd.hear(/^(?:расстрелять)\s([^]+)$/i, async (message, args, bot) => { 
+	let user = users.find(x=> x.id === message.replyMessage.senderId)
+	if(message.replyMessage){
+		if(!message.args[1]){
+			return message.send(`🔫 @id${message.user.id}(${message.user.tag}) расстрелял @id${user.id}(${user.tag})`)
+		}
+		return message.send(`🔫 @id${message.user.id}(${message.user.tag}) расстрелял${message.args[1]} @id${user.id}(${user.tag})`) 
+	} else { 
+		return message.send(`Перешлите сообщение кого хотите расстрелять`)
+	} 
+ 
+});
+
+cmd.hear(/^(?:Отравить)\s([^]+)$/i, async (message, args, bot) => { 
+	let user = users.find(x=> x.id === message.replyMessage.senderId)
+	if(message.replyMessage){
+		if(!message.args[1]){
+			return message.send(`💊 @id${message.user.id}(${message.user.tag}) отравил @id${user.id}(${user.tag})`)
+		}
+		return message.send(`💊 @id${message.user.id}(${message.user.tag}) отравил ${message.args[1]} @id${user.id}(${user.tag})`) 
+	} else { 
+		return message.send(`Перешлите сообщение кого хотите отравить`)
+	} 
+ 
+});
+
+cmd.hear('chat_invite_user', (next, context) => {
+  const user = users.filter(x => x.id === next.eventMemberId)[0]
+  console.log(next);
+  if(user.cmban) {
+    next.send('В беседу был приглашен забаненый пользователь!\nОн будет исключён.')
+    vk.api.messages.removeChatUser({ chat_id: next.chatId, user_id: user.id })
+  }
+  return context()
+});
+
+cmd.hear(/^(?:bban|ббан)$/i, msg => {
+  const user = users.filter(x => x.id === msg.senderId)[0]
+  if(user.role < 3) return msg.send('У тебя недостаточная роль!')
+  if(!msg.hasReplyMessage) return msg.send('Нужно переслать сообщение!')
+  const u = users.filter(x => x.id === msg.replyMessage.senderId)[0]
+  if(user.id == u.id) return msg.send('Нельзя выдать бан самому себе :(')
+  if(u.role > user.role) return msg.send('Нельзя выдать бан пользователю с высшей ролью!')
+  u.cmban = true
+  msg.send(`@id${u.id}(Пользователь) был забанен в беседе!`)
+  vk.api.messages.removeChatUser({ chat_id: msg.chatId, user_id: u.id })
+});
+
+cmd.hear(/^(?:warn|пред|предупреждение)$/i, msg => {
+  const user = users.filter(x => x.id === msg.senderId)[0]
+  if(user.role < 2) return msg.send('У тебя недостаточная роль!')
+  if(!msg.hasReplyMessage) return msg.send('Нужно переслать сообщение!')
+  const u = users.filter(x => x.id === msg.replyMessage.senderId)[0]
+  if(user.id == u.id) return msg.send('Нельзя выдать пред самому себе :(')
+  if(user.role > user.role) return msg.send('Нельзя выдать предупреждение пользователю с высшей ролью!')
+  if(user.warns+1 == 3) {
+    msg.send('Пользователь получает третье предупреждение и исключается из беседы')
+    vk.api.messages.removeChatUser({ chat_id: msg.chatId, user_id: u.id })
+    return
+  }
+  u.warns++
+  msg.send('Пользователь получил 1 предупреждение')
+});
+
+cmd.hear(/^(?:kick|кик)$/i, msg => {
+  const user = users.filter(x => x.id === msg.senderId)[0]
+  if(user.role < 3) return msg.send('У тебя недостаточная роль!')
+  if(!msg.hasReplyMessage) return msg.send('Нужно переслать сообщение!')
+  const u = users.filter(x => x.id === msg.replyMessage.senderId)[0]
+  if(user.id == u.id) return msg.send('Нельзя кикнуть самого себя :(')
+  if(u.role > user.role) return msg.send('Нельзя кикнуть пользователя с высшей ролью!')
+  msg.send(`@id${u.id}(Пользователь) был кикнут из беседы`)
+  vk.api.messages.removeChatUser({ chat_id: msg.chatId, user_id: u.id })
 });
