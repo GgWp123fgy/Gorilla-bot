@@ -5761,69 +5761,6 @@ console.log("Виджет обновлён!")
 updateWidget()
 setInterval(updateWidget, 300000)
 
-cmd.hear(/^(?:\+кланармия|+кармия)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-let clan = clans[Number(message.args[1])]
-clan.zashita = Number(message.args[2])
-return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${utils.sp(message.args[2])} войск!`)
-
-})
-cmd.hear(/^(?:\-кланармия|-кармия)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-let clan = clans[Number(message.args[1])]
-clan.zashita -= Number(message.args[2])
-return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${utils.sp(message.args[2])} войск!`)
-
-})
-cmd.hear(/^(?:\-кланзащита|-кзащита)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-let clan = clans[Number(message.args[1])]
-clan.zashita -= Number(message.args[2])
-return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${utils.sp(message.args[2])} войск!`)
-
-})
-cmd.hear(/^(?:\+кланказна|+кказна)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-let clan = clans[Number(message.args[1])]
-clan.balance = Number(message.args[2])
-	return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${utils.sp(message.args[2])}$!`)
-})
-cmd.hear(/^(?:\-кланказна|-кказна)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-let clan = clans[Number(message.args[1])]
-clan.balance -= Number(message.args[2])
-	return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${utils.sp(message.args[2])}$!`)
-})
-
-
-cmd.hear(/^(?:\+кланрейтинг|+крейт)\s([0-9]+)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-	let clan = clans[Number(message.args[1])]
-	clan.good = Number(message.args[2])
-	clan.fuflo = Number(message.args[3])
-	return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${message.args[2]} побед и ${message.args[3]} поражений`)
-})
-cmd.hear(/^(?:\-кланрейтинг|-крейт)\s([0-9]+)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-	let clan = clans[Number(message.args[1])]
-	clan.good -= Number(message.args[2])
-	clan.fuflo -= Number(message.args[3])
-	return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${message.args[2]} побед и ${message.args[3]} поражений`)
-})
-cmd.hear(/^(?:\+кланкубки|+ккубки)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-let clan = clans[Number(message.args[1])]
-clan.retin = Number(message.args[2])
-return bot(`Выполнил. Клану с ID ${message.args[1]} было выдано ${utils.sp(message.args[2])} кубков!`)
-
-})
-cmd.hear(/^(?:\-кланкубки|-ккубки)\s([0-9]+)\s([0-9]+)$/i, async (message, bot) => {
-	if(message.user.settings.adm !== 4) return;
-let clan = clans[Number(message.args[1])]
-clan.retin -= Number(message.args[2])
-return bot(`Выполнил. Клану с ID ${message.args[1]} было убрано ${utils.sp(message.args[2])} кубков!`)
-
-})
 
 cmd.hear(/^(?:\/пост)\s([^]+)$/i, async (message, bot) => {
 	if(message.user.settings.adm !== 5) return;
@@ -5898,21 +5835,14 @@ cmd.hear(/^(?:Для бесед)$/i, async(message, bot) => {
 		
 		    👨‍💻Информационные:
 		
-		🥎Состав - Узнать кто из Администраторов в сети. (Скоро) 
-		👑Роль - Ваша роль в беседе. 
+		🥎Состав - Узнать кто из Администраторов в сети. (Скоро)  
 		
 		❗Полезные:
 		
 		👤Рп - Рп команды
 		
 		⚠️Для администраторов:
-		
-		1⃣Ббан - выдача блокировки в беседе. 
-		2⃣Кик - кикнуть игрока из беседы. 
-		3⃣Мут- выдать молчанку игроку. `)
+
+		1⃣Кик - кикнуть игрока из беседы.  `)
 	}
 });
-
-
-
-
