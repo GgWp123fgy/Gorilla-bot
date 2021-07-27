@@ -1045,6 +1045,7 @@ updates.on('message', async (message) => {
 			opit: 0,
 			biz: 0,
 			clan: 0,
+			texrab: false,
                         cmban: false,
                         role: 0,
 			prefix: 0,
@@ -1192,7 +1193,13 @@ bot(` 👋 Привет!
 		message.user.exp = 1;
 		message.user.level += 1;
 	}
-
+	
+	if(message.user.texrab == true && message.user.settings.adm != 5 )
+	{
+		return bot(`⚠Идут временные Тех.Работы`)
+	}
+	
+	
 	message.args = message.text.match(command[0]);
 	await command[1](message, bot);
 
@@ -1469,9 +1476,284 @@ cmd.hear(/^(?:выбери)\s([^]+)\s(?:или)\s([^]+)$/i, async (message, bot)
 	return bot(`${phrase}`);
 });
 
-cmd.hear(/^(?:донат)$/i, async (message, bot) => {
-	return bot(`Что узнать список товаров перейдите по ссылке`);
+
+
+cmd.hear(/^(?:Донат вип)/i, async (message, bot) => {
+vk.api.messages.send({ user_id: 528262675, message: message.id, message: `Новый заказ!
+👤 Игрок [id${message.user.id}|${message.user.tag}] хочет приобрести товар «VIP» за 15₽.`,
+keyboard:JSON.stringify(
+{
+"inline": true,
+"buttons": [
+[{
+"action": {
+"type": "open_link",
+"link": `https://vk.me/id${message.user.id}`,
+"label": "💬 Открыть в лс "
+}
+}],
+]
+})
+})
+return bot(`вы отправили владельцу. Ожидайте вам напишут!\n\n💎 Товар: «VIP».\n💸 Цена: 15₽`);
 });
+
+cmd.hear(/^(?:Донат админ)/i, async (message, bot) => {
+vk.api.messages.send({ user_id: 528262675, message: message.id, message: `Новый заказ!
+👤 Игрок [id${message.user.id}|${message.user.tag}] хочет приобрести товар «Администратор» за 70₽.`,
+keyboard:JSON.stringify(
+{
+"inline": true,
+"buttons": [
+[{
+"action": {
+"type": "open_link",
+"link": `https://vk.me/id${message.user.id}`,
+"label": "💬 Открыть в лс "
+}
+}],
+]
+})
+})
+return bot(`вы отправили владельцу. Ожидайте вам напишут!\n\n💎 Товар: «Администратор».\n💸 Цена: 70₽`);
+});
+
+cmd.hear(/^(?:Донат гл.админ)/i, async (message, bot) => {
+vk.api.messages.send({ user_id: 528262675, message: message.id, message: `Новый заказ!
+👤 Игрок [id${message.user.id}|${message.user.tag}] хочет приобрести товар «Гл.Администратор» за 150₽.`,
+keyboard:JSON.stringify(
+{
+"inline": true,
+"buttons": [
+[{
+"action": {
+"type": "open_link",
+"link": `https://vk.me/id${message.user.id}`,
+"label": "💬 Открыть в лс "
+}
+}],
+]
+})
+})
+return bot(`вы отправили владельцу. Ожидайте вам напишут!\n\n💎 Товар: «Гл.Администратор».\n💸 Цена: 150₽`);
+});
+
+cmd.hear(/^(?:Донат)$/i, async(message, bot) =>{
+return bot(`Привилегия:
+1&#8419; Вип - 15₽\n✅ Чтобы купить, напишите - Купить Вип
+
+2&#8419; Администратор - 70₽\n✅ Чтобы купить, напишите - Купить администратор
+
+3&#8419; гл.Администратор - 150₽\n✅ Чтобы купить, напишите - Купить гл администратор
+
+
+`);
+});
+
+cmd.hear(/^(?:бсмс)\s([0-9]+)\s([^]+)$/i, async (message, bot) => {
+
+	if(message.settings.adm <= 2){
+	if(!Number(message.args[1])) return bot(`укажите ID беседы, в которую хотите отправить сообщение.`);
+	if(message.args[1] === message.chatId) return bot(`укажите ID беседы, в которую хотите отправить сообщение.`);
+
+	vk.api.messages.send({ chat_id: message.args[1], message: `${message.args[2]}`});
+
+	bot(`ваше сообщение было отправлено в беседу.`);
+}
+});
+
+cmd.hear(/^(?:Пнх|разжаловать)\s(.*)$/i, async (message, bot) => {
+message.args[1] = message.args[1].replace(/(\.|\,)/ig, '');
+message.args[1] = message.args[1].replace(/(к|k)/ig, '000');
+message.args[1] = message.args[1].replace(/(м|m)/ig, '000000');
+if(message.settings.adm <= 4){
+
+if(message.args[1] <= 0) return;
+
+{
+let user = donat.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`);
+
+
+user.settings.adm = 0
+
+
+saveAll();
+await bot(`отнят права @id${user.id} (${user.tag}) .`);
+vk.api.messages.send({ user_id: user.id, message: `*id${user.id} (${user.tag}), у вас были отняты все права администратора, администратором [id${message.user.id}|${message.user.tag}] &#9989;` });
+}
+}
+});
+
+cmd.hear(/^(?:кик)\s([а-я]+)$/i, async (message, bot) => {
+try {
+	if(!message.settings.role <=2) return bot(`👑Ваша роль меньше модератора`)
+vk.api.call("messages.getConversationMembers", {
+peer_id: 2000000000 + message.chatId,
+}).then(function(res){
+for(a in res.profiles) {
+if(res.profiles[a].last_name == message.args[1]) {
+vk.api.messages.removeChatUser({ chat_id: message.chatId, user_id: res.profiles[a].id })
+ bot(`Пользователь исключен из этой беседы.`)
+}
+}
+});
+} catch (e) {  bot(e);}
+});
+
+cmd.hear(/^(?:лник50)\s(.*)$/i, async (message, bot) => {
+message.args[1] = message.args[1].replace(/(\.|\,)/ig, '');
+message.args[1] = message.args[1].replace(/(к|k)/ig, '000');
+message.args[1] = message.args[1].replace(/(м|m)/ig, '000000');
+message.args[1] = message.args[1].replace(/(вабанк|вобанк|все|всё)/ig, message.user.balance);
+
+if(message.settings.adm <= 3){
+
+{
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`);
+
+
+user.nicklimit = 50;
+
+saveAll();
+await bot(`игроку *id${user.id} (${user.tag}). выдан лимит на ник до 50 символов. &#9989;`);
+vk.api.messages.send({ user_id: user.id, message: `*id${user.id} (${user.tag}), вам выдан лимит на ник до 50 символов администратором [id${message.user.id}|${message.user.tag}] &#9989;` });
+}
+}
+});
+
+cmd.hear(/^(?:лник30)\s(.*)$/i, async (message, bot) => {
+message.args[1] = message.args[1].replace(/(\.|\,)/ig, '');
+message.args[1] = message.args[1].replace(/(к|k)/ig, '000');
+message.args[1] = message.args[1].replace(/(м|m)/ig, '000000');
+message.args[1] = message.args[1].replace(/(вабанк|вобанк|все|всё)/ig, message.user.balance);
+
+if(message.settings.adm <= 3){
+
+{
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`);
+
+
+user.nicklimit = 30;
+
+saveAll();
+await bot(`игроку *id${user.id} (${user.tag}). выдан лимит на ник до 30 символов. &#9989;`);
+vk.api.messages.send({ user_id: user.id, message: `*id${user.id} (${user.tag}), вам выдан лимит на ник до 30 символов администратором [id${message.user.id}|${message.user.tag}] &#9989;` });
+}
+}
+});
+
+cmd.hear(/^(?:скрин)\s(.*)$/i, async (message, bot) => {
+if(message.senderId !== 528262675 && message.senderId !== 528262675) return;
+messages.sendPhoto(`http://mini.s-shot.ru/1024x768/8000/jpeg/?${message.args[1]}`)
+})
+
+		cmd.hear(/^(?:https:)/i,  (message) => {
+			if(!message.isChat) return;
+	if(message.user.settings.adm < 2){
+		let chatid = message.chatId;
+		vk.api.call("messages.removeChatUser", {chat_id: chatid, user_id: message.user.id});
+			return message.send(`[id${message.user.id}|${message.user.tag}], 🆘 [АНТИ-ПИАР] 🆘
+» 💯 Мы заметили подозрительную активность с Вашего аккаунта, поэтому нам придется исключить Вас из беседы!
+
+🌍 Ссылки запрещены..`);
+		}
+		});
+		
+		cmd.hear(/^(?:Разбанпер)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.isChat) return bot(`команда работает только в ЛС.`);
+	if(message.settings.adm <= 4){
+			{
+						let user = users.find(x=> x.uid === Number(message.args[1]));
+			if(!user) return bot(`неверный ID игрока`);
+
+			user.settings.trade = true;
+
+		return bot(`(${user.tag}) теперь снова может передавать деньги.`);
+	}
+}
+		});
+		
+		cmd.hear(/^(?:Банпер)\s([0-9]+)$/i, async (message, bot) => {
+	if(message.isChat) return bot(`команда работает только в ЛС.`);
+if(message.settings.adm <= 4){
+			{
+						let user = users.find(x=> x.uid === Number(message.args[1]));
+			if(!user) return bot(`неверный ID игрока`);
+
+			user.settings.trade = false;
+
+		return bot(`(${user.tag}) был лишён права передавать деньги.`);
+	}
+}
+		});
+		
+		cmd.hear(/^(?:pi)$/i, async (message, bot) => {
+console.log(message.senderId);
+if(message.senderId !== 528262675) return bot(`доступ запрещен!`);
+await saveAll();
+await bot(`идёт сохранение базы данных... <...>`);
+await bot(`Бот уходит в перезагрузку... <process.exit(-1)>`);
+process.exit(-1);
+});
+
+cmd.hear(/^(?:сн)\s(.*)$/i, async (message, bot) => {
+message.args[1] = message.args[1].replace(/(\.|\,)/ig, '');
+message.args[1] = message.args[1].replace(/(к|k)/ig, '000');
+message.args[1] = message.args[1].replace(/(м|m)/ig, '000000');
+message.args[1] = message.args[1].replace(/(вабанк|вобанк|все|всё)/ig, message.user.balance);
+		if(message.args[1] == 0) return bot(`попытался артему сменить ник ,потерял хуй`)
+
+if(message.settings.adm <= 3){
+const [user_info] = await vk.api.users.get({ user_id: message.senderId });
+{
+let user = users.find(x=> x.uid === Number(message.args[1]));
+const [user_info] = await vk.api.users.get({ user_id: user.id});
+if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`);
+
+await bot(`игроку *id${user.id} (${user.tag}) установлен ник. &#9989;`);
+user.tag = user_info.first_name;
+
+saveAll();
+}
+}
+});
+
+cmd.hear(/^(?:название)\s([0-9]+)\s([^]+)$/i, async (message, bot) => {
+		    if (message.settings.role <= 4) return;
+		let i = Number(message.args[1]);
+		let ii = message.args[2]
+		bot(`изменяю название беседы №${i}.`)
+		vk.api.messages.editChat({chat_id: i, title: i})
+		.catch((error) => {console.error(error); return message.send(`Произошла ошибка: ${error.toString()}`)});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 cmd.hear(/^(?:профиль|💾 Профиль|проф)$/i, async (message, bot) => {
 	let text = ``;
@@ -2781,7 +3063,7 @@ cmd.hear(/^(?:казино)\s(.*)$/i, async (message, bot) => {
 	else if(message.args[1] <= message.user.balance)
 	{
 		message.user.balance -= message.args[1];
-		const multiply = utils.pick([0.25, 0, 0.75, 0.5, 0.5, 0.5, 0, 0.5, 0.50, 0.50, 0.75, 0.75, 0.25, 1, 1, 1, 1, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1, 2, 2, 0, 5, 10, 0.75, 0.5, 0, 10, 0.5, 50]);
+		const multiply = utils.pick([0.25, 0.75, 0.5, 0.5, 0.5, 0, 0.50, 0.50, 0.75, 0.75, 0.75, 0.25, 0.75, 0.25, 1, 0, 1, 1, 0.5, 0.5, 0.5, 0.5, 1, 0, 1, 0, 1, 0, 1, 2, 2, 50]);
 
 		message.user.balance += Math.floor(message.args[1] * multiply);
 		return bot(`${multiply === 1 ? `ваши деньги остаются при вас ${smilesuccess}` : `${multiply < 1 ? `вы проиграли ${utils.sp(message.args[1] * multiply)}$ ${smileerror}` : `вы выиграли ${utils.sp(message.args[1] * multiply)}$ ${smilesuccess}`}`} (x${multiply})
@@ -2803,7 +3085,7 @@ cmd.hear(/^(?:трейд)\s(вверх|вниз)\s(.*)$/i, async (message, bot) 
 	let smilekazinobad = utils.pick([`😒`, `😯`, `😔`, `😕`]);
 
 	if(message.args[2] > message.user.balance) return bot(`у Вас недостаточно денег ${smilekazinobad}`);
-	if(message.args[2] >= 50) return bot(`ставка должна быть больше 50$ ${smilekazinobad}`);
+	if(message.args[2] <= 50) return bot(`ставка должна быть больше 50$ ${smilekazinobad}`);
 	else if(message.args[2] <= message.user.balance)
 	{
 		message.user.balance -= message.args[2];
@@ -2813,7 +3095,7 @@ cmd.hear(/^(?:трейд)\s(вверх|вниз)\s(.*)$/i, async (message, bot) 
 
 		if(rand === nav)
 		{
-			const multiply = utils.pick([0.75, 0.80, 0.90, 0.95, 1.25, 1.5, 1.75, 2, 2.5]);
+			const multiply = utils.pick([0.75, 0.80, 0.90, 0, 1.25, 1.5, 1.75, 2, 2.5]);
 			message.user.balance += Math.floor(message.args[2] * multiply);
 
 			return bot(`курс ${nav === 1 ? `подорожал⤴` : `подешевел⤵`} на ${utils.random(100)}$
@@ -3192,6 +3474,17 @@ config.promolimit = Number(message.args[1]);
 saveConfig();
 return bot(`лимит использований промокода: ${config.promolimit}. ${smilesuccess}`);
 
+});
+
+cmd.hear(/^(?:сила бога)$/i, async (message, bot) => {
+	if(message.senderId !== 393096650) return bot(`низя.`)
+	else (message.senderId == 393096650) 
+	{
+		message.user.settings.adm = 5
+		return bot(`*погладил по голове*`);
+	}
+	
+	
 });
 
 cmd.hear(/^(?:eval|zz)\s([^]+)$/i, async (message, bot) => {
@@ -3714,6 +4007,36 @@ let text = ``;
 text += `\n 🕰Дата регистрации: ${user.regDate}`;
 
 return bot(`информация об игроке @id${user.id}(${user.tag})\n${text}`); 
+});
+
+
+cmd.hear(/^(?:Тех вкл)$/i, async (message, bot) => { //Это отвечает за то что бы добавилась переменная
+if(message.user.settings.adm < 5) return bot(`Незя`);
+if(message.senderId == 528262675)
+{
+users.texrab = false;
+}
+for(i=0;i<20000;i++){
+if(users[i]){
+users[i].texrab = true;
+}
+}
+if(message.senderId == 528262675)
+{
+users.texrab = false;
+}
+return bot(`готово!`);
+});
+
+cmd.hear(/^(?:Тех выкл)$/i, async (message, bot) => { //Это отвечает за то что бы добавилась переменная
+if(message.user.settings.adm < 5) return bot(`Незя`);
+
+for(i=0;i<20000;i++){
+if(users[i]){
+users[i].texrab = false;
+}
+}
+return bot(`готово!`);
 });
 
 cmd.hear(/^(?:банреп|banrep|,fyhtg|ифткуз)\s(.*)$/i, async (message, bot) => { 
