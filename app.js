@@ -5906,7 +5906,7 @@ user.misc.pet = Number(message.args[2]);
 return bot(` я выдал питомца ${pets.find(x=> x.id === Number(message.args[2])).name} -> @id${user.id}(${user.tag})`)
 });
 
-cmd.hear(/^(?:Для бесед)\s([0-9]+)$/i, async(message, bot) => {
+cmd.hear(/^(?:Для бесед)$/i, async(message, bot) => {
 	
 	if(message.args[1] == 1){
 		await message.send(`👑Команды для бесед:
@@ -5922,9 +5922,8 @@ cmd.hear(/^(?:Для бесед)\s([0-9]+)$/i, async(message, bot) => {
 		
 		⚠️Для администраторов:
 		
-		1⃣Ббан - выдача блокировки в беседе. 
-		2⃣Кик - кикнуть игрока из беседы. 
-		3⃣Мут- выдать молчанку игроку. `) 
+		
+		1⃣Кик - кикнуть игрока из беседы.`) 
 
 });
 
@@ -6046,51 +6045,6 @@ cmd.hear(/^(?:Отравить)\s([^]+)$/i, async (message, args, bot) => {
  
 });
 
-cmd.hear('chat_invite_user', (next, context) => {
-  const user = users.filter(x => x.id === next.eventMemberId)[0]
-  console.log(next);
-  if(user.cmban) {
-    next.send('В беседу был приглашен забаненый пользователь!\nОн будет исключён.')
-    vk.api.messages.removeChatUser({ chat_id: next.chatId, user_id: user.id })
-  }
-  return context()
-});
-
-cmd.hear(/^(?:bban|ббан)$/i, msg => {
-  const user = users.filter(x => x.id === msg.senderId)[0]
-  if(user.role < 3) return msg.send('У тебя недостаточная роль!')
-  if(!msg.hasReplyMessage) return msg.send('Нужно переслать сообщение!')
-  const u = users.filter(x => x.id === msg.replyMessage.senderId)[0]
-  if(user.id == u.id) return msg.send('Нельзя выдать бан самому себе :(')
-  if(u.role > user.role) return msg.send('Нельзя выдать бан пользователю с высшей ролью!')
-  u.cmban = true
-  msg.send(`@id${u.id}(Пользователь) был забанен в беседе!`)
-  vk.api.messages.removeChatUser({ chat_id: msg.chatId, user_id: u.id })
-});
-
-cmd.hear(/^(?:warn|пред|предупреждение)$/i, msg => {
-  const user = users.filter(x => x.id === msg.senderId)[0]
-  if(user.role < 2) return msg.send('У тебя недостаточная роль!')
-  if(!msg.hasReplyMessage) return msg.send('Нужно переслать сообщение!')
-  const u = users.filter(x => x.id === msg.replyMessage.senderId)[0]
-  if(user.id == u.id) return msg.send('Нельзя выдать пред самому себе :(')
-  if(user.role > user.role) return msg.send('Нельзя выдать предупреждение пользователю с высшей ролью!')
-  if(user.warns+1 == 3) {
-    msg.send('Пользователь получает третье предупреждение и исключается из беседы')
-    vk.api.messages.removeChatUser({ chat_id: msg.chatId, user_id: u.id })
-    return
-  }
-  u.warns++
-  msg.send('Пользователь получил 1 предупреждение')
-});
-
-cmd.hear(/^(?:kick|кик)$/i, msg => {
-  const user = users.filter(x => x.id === msg.senderId)[0]
-  if(user.role < 3) return msg.send('У тебя недостаточная роль!')
-  if(!msg.hasReplyMessage) return msg.send('Нужно переслать сообщение!')
-  const u = users.filter(x => x.id === msg.replyMessage.senderId)[0]
-  if(user.id == u.id) return msg.send('Нельзя кикнуть самого себя :(')
-  if(u.role > user.role) return msg.send('Нельзя кикнуть пользователя с высшей ролью!')
-  msg.send(`@id${u.id}(Пользователь) был кикнут из беседы`)
-  vk.api.messages.removeChatUser({ chat_id: msg.chatId, user_id: u.id })
+cmd.hear(/^(?:Роль|моя роль)$/i, async (message, bot) => {
+	return message.send(`👑Ваша роль @id${message.user.id(${message.user.role.toString().replace(/1/gi, "Участник").replace(/2/give, "Модератор").replace(/3/gi,"Ст.модератор").replace(/4/gi, "Администратор").replace(/5/gi, "Ст.Администратор").replace(/6/gi, "Создатель");
 });
