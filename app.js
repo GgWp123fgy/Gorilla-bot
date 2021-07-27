@@ -3066,7 +3066,7 @@ cmd.hear(/^(?:казино)\s(.*)$/i, async (message, bot) => {
 		const multiply = utils.pick([0.25, 0.75, 0.5, 0.5, 0.5, 0, 0.50, 0.50, 0.75, 0.75, 0.75, 0.25, 0.75, 0.25, 1, 0, 1, 1, 0.5, 0.5, 0.5, 0.5, 1, 0, 1, 0, 1, 0, 1, 2, 2, 50]);
 
 		message.user.balance += Math.floor(message.args[1] * multiply);
-		return bot(`${multiply === 1 ? `ваши деньги остаются при вас ${smilesuccess}` : `${multiply < 1 ? `вы проиграли ${utils.sp(message.args[1] * multiply)}$ ${smileerror}` : `вы выиграли ${utils.sp(message.args[1] * multiply)}$ ${smilesuccess}`}`} (x${multiply})
+		return bot(`${multiply === 1 ? `ваша ставка ${utils.sp(message.args[1])} ваши деньги остаются при вас ${smilesuccess}` : `${multiply < 1 ? `ваша ставка ${utils.sp(message.args[1])} вы проиграли ${utils.sp(message.args[1] * multiply)}$ ${smileerror}` : `ваша ставка ${utils.sp(message.args[1])} вы выиграли ${utils.sp(message.args[1] * multiply)}$ ${smilesuccess}`}`} (x${multiply})
 		💰 Ваш баланс: ${utils.sp(message.user.balance)}$`);
 	}
 });
