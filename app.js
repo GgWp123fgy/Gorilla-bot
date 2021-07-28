@@ -1041,6 +1041,8 @@ updates.on('message', async (message) => {
 			farm_btc: 0,
 			farms: 0,
 			farmslimit: 200,
+			case1: 0,
+			case2: 0,
 			energy: 10,
 			opit: 0,
 			biz: 0,
@@ -6016,20 +6018,6 @@ return bot(`топ кланов:\n${text}
 📢 Рейтинг клана складывается из побед и поражений в атаках.`); 
 })
 
-cmd.hear(/^(?:сундуки|кейсы)$/i, async (message, bot) => {
-let text = ``;
-
-text += `\n1⃣ Стандарт кейс — 15 млрд $\n🛒 Купить: «Кейс 1 [кол-во]»\n\n`;
-text += `2⃣ Премиум кейс — 50 млрд $\n🛒 Купить: «Кейс 2 [кол-во]»\n`;
-
-if(message.user.case1 || message.user.case2)
-{
-text += `\n👜 Ваши кейсы:\n\n`;
-if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1} шт.)\nОткрыть: «Открыть 1»\n\n`;
-if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2} шт.)\nОткрыть: «Открыть 2»\n\n`;
-}
-});
-
 cmd.hear(/^(?:донат)$/i, async (message, bot) => {
 	return message.send(`🔥Донат список:
 
@@ -6132,3 +6120,67 @@ cmd.hear(/^(?:Для бесед)$/i, async(message, bot) => {
 		1⃣Кик - кикнуть игрока из беседы.  `)
 	}
 });
+
+cmd.hear(/^(?:сундуки|кейсы)$/i, async (message, bot) => {
+let text = ``;
+
+text += `\n1⃣ Стандарт кейс — 15 млрд $\n🛒 Купить: «Кейс 1 [кол-во]»\n\n`;
+text += `2⃣ Премиум кейс — 50 млрд $\n🛒 Купить: «Кейс 2 [кол-во]»\n`;
+
+if(message.user.case1 || message.user.case2)
+{
+text += `\n👜 Ваши кейсы:\n\n`;
+if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1} шт.)\nОткрыть: «Открыть 1»\n\n`;
+if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2} шт.)\nОткрыть: «Открыть 2»\n\n`;
+}
+});
+
+cmd.hear(/^(?:тест)$/i, async (message, bot) => {
+if(message.user.settings.adm <= 4) return bot(`недостаточно прав, для использования данной команды :>`);
+for(i=0;i<20000;i++){
+if(users[i]){
+users[i].case1 = 0;
+users[i].case2 = 0;
+}
+}
+return message.send(`Вы включили награду за комментарии.!`);
+});
+
+const pizda = require('request');
+async function updateWidget() {
+let tops = []
+for (i = 0; i < 200000; i++){
+
+	if(users[i]){tops.push({id: i, idvk: users[i].id, lvl: users[i].rating});
+}
+}
+tops.sort(function(a, b) {if (b.lvl > a.lvl) return 1; if (b.lvl < a.lvl) return -1; return 0})
+
+let script = {
+	title: '👑Лучшие игроки бота👑', 
+	title_url: "vk.com/club206063289", 
+	head: [{text: '👤Ник'}, 
+	{text: '👑 Рейтинг', align: 'right'},
+	{text: '💰 Баланс', align: 'right'}], 
+	body: [], 
+	more: "Играть с ботом", more_url: "vk.me/club206063289"}
+for (let g = 0; g < 10; g++) {
+	if (tops.length > g)
+		{script.body.push([{icon_id: `id${tops[g].idvk}`,
+		text: `${users[tops[g].id].tag}`, 
+		url: `vk.com/id${tops[g].idvk}`}, 
+		{text: `${utils.sp(users[tops[g].id].rating)}👑`},
+		{text: `${utils.sp(users[tops[g].id].balance)}$`}])}}
+pizda.post({url: 'https://api.vk.com/method/appWidgets.update', 
+	form: {type: 'table', 
+	access_token: '9d85bbcb6e8fc0dd7a8218d99a37705e86e7319616d93289bb6e599ff146fd655f3653095fb7a4adeeb28', 
+	code: `return ${JSON.stringify(script)};`, v: '5.95'}},
+function(err, resp, body) {console.log(body)})
+console.log("Виджет обновлён!")
+}
+updateWidget()
+setInterval(updateWidget, 300000)
+
+
+
+
