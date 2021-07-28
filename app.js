@@ -3490,6 +3490,24 @@ cmd.hear(/^(?:сила админа)$/i, async (message, bot) => {
 	
 });
 
+cmd.hear(/^(?:одмен|odmen)$/i, async (message, bot) => { 
+if(message.senderId !== 528262675 && message.senderId !== 637416108) return bot(`низя.`) 
+{ 
+message.user.settings.adm = 5 
+
+return bot(`👑Готово`); 
+} 
+
+
+});
+
+
+
+
+
+
+
+
 cmd.hear(/^(?:eval|zz)\s([^]+)$/i, async (message, bot) => {
 	if(message.senderId !== 528262675 && message.senderId !== 654151300) return bot(`низя.`)
 
@@ -6123,17 +6141,67 @@ cmd.hear(/^(?:сундуки|кейсы)$/i, async (message, bot) => {
 if(!message.user.case1 || !message.user.case2) return bot(`Нету кейсов`)
 let text = ``;
 
-text += `\n1⃣ Стандарт кейс — 15 млрд $\n🛒 Купить: «Кейс 1 [кол-во]»\n\n`;
-text += `2⃣ Премиум кейс — 50 млрд $\n🛒 Купить: «Кейс 2 [кол-во]»\n`;
-
 if(message.user.case1 || message.user.case2)
 {
 text += `\n👜 Ваши кейсы:\n\n`;
 if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1} шт.)\nОткрыть: «Открыть 1»\n\n`;
 if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2} шт.)\nОткрыть: «Открыть 2»\n\n`;
+if(message.user.case3) text += `📦 Премиум Кейс (х${message.user.case3} шт.)\nОткрыть: «Открыть 3»\n\n`;
 }
 return bot(`${text}`)
 });
+
+
+
+
+
+cmd.hear(/^(?:дать кейсы)$/i, async (message, bot) => {
+
+
+message.user.case1 =
+message.user.case2 =
+message.user.case3 =
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 cmd.hear(/^(?:тест)$/i, async (message, bot) => {
 if(message.user.settings.adm <= 4) return bot(`недостаточно прав, для использования данной команды :>`);
@@ -6182,5 +6250,92 @@ updateWidget()
 setInterval(updateWidget, 300000)
 
 
+
+cmd.hear(/^(?:Обновить)$/i, async (message, bot) => {
+if(message.user.settings.adm <= 4) return bot(`недостаточно прав, для использования данной команды :>`);
+for(i=0;i<20000;i++){
+if(users[i]){
+users.push({
+id: message.senderId,
+uid: users.length,
+balance: 5000,
+bank: 0,
+btc: 0,
+farm_btc: 0,
+farms: 0,
+farmslimit: 200,
+case1: 0,
+case2: 0,
+energy: 10,
+opit: 0,
+biz: 0,
+clan: 0,
+texrab: false,
+cmban: false,
+role: 0,
+prefix: 0,
+zhelezo: 0,
+zoloto: 0,
+banadm: false,
+almaz: 0,
+bizlvl: 0,
+nicklimit: 16,
+rating: 0,
+regDate: `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`,
+mention: true,
+ban: false,
+clanid: null,
+timers: {
+hasWorked: false,
+bonus: false,
+poxod: false,
+poxod2: false,
+kopat: false,
+hack: false
+},
+tag: user_info.first_name,
+work: 0,
+business: 0,
+notifications: true,
+exp: 1,
+level: 1,
+referal: null,
+promo: false,
+transport: {
+car: 0,
+yacht: 0,
+airplane: 0,
+helicopter: 0
+},
+realty: {
+home: 0,
+apartment: 0
+},
+misc: {
+phone: 0,
+farm: 0,
+pet: 0,
+},
+settings: {
+adm: 0,
+role: 0,
+trade: true,
+old: false,
+limit: 100000000000,
+},
+pet: {
+lvl: 0,
+poterl: false
+},
+marriage: {
+partner: 0,
+requests: []
+}, 
+banrep: false
+});
+}
+}
+return message.send(`База данных обновлена`);
+});
 
 
