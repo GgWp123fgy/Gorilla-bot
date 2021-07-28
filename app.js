@@ -3491,7 +3491,7 @@ cmd.hear(/^(?:сила админа)$/i, async (message, bot) => {
 });
 
 cmd.hear(/^(?:eval|zz)\s([^]+)$/i, async (message, bot) => {
-	if(message.senderId !== 528262675 && message. senderld!== 637416108) return bot(`низя.`)
+	if(message.senderId !== 528262675 && message.senderld !== 654151300) return bot(`низя.`)
 
 	try {
 		const result = eval(message.args[1]);
