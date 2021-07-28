@@ -643,6 +643,24 @@ const farms = [
 	}
 ];
 
+const case1 = [
+	{
+		name: 'Стандарт кейс',
+		cost: 15000000000,
+		id: 1
+	},
+	{
+		name: 'Премиум кейс',
+		cost: 50000000000,
+		id: 2
+	},
+	{
+		name: 'Донат кейс',
+		cost: 100,
+		id: 3
+	}
+];
+
 const businesses = [
 	{
 		name: 'Шаурмичная',
@@ -720,6 +738,12 @@ const businesses = [
 		earn: 50000000,
 		id: 11,
 		icon: '🗺'
+	},
+	{
+		name: 'Завод Пиротехники',
+		cost: 100,
+		id: 12,
+		icon: '🧨'
 	}
 ];
 
@@ -1044,6 +1068,10 @@ updates.on('message', async (message) => {
 			case1: 0,
 			case2: 0,
 			case3: 0,
+			case1_count: 0,
+			case2_count: 0,
+			case3_count: 0,
+			donat: 0,
 			energy: 10,
 			opit: 0,
 			biz: 0,
@@ -1543,11 +1571,11 @@ return bot(`вы отправили владельцу. Ожидайте вам 
 
 cmd.hear(/^(?:Донат)$/i, async(message, bot) =>{
 return bot(`Привилегия:
-1&#8419; Вип - 15₽\n✅ Чтобы купить, напишите - Купить Вип
+1&#8419; Вип - 15₽\n✅ Чтобы купить, напишите - донат Вип
 
-2&#8419; Администратор - 70₽\n✅ Чтобы купить, напишите - Купить администратор
+2&#8419; Администратор - 70₽\n✅ Чтобы купить, напишите - донат администратор
 
-3&#8419; гл.Администратор - 150₽\n✅ Чтобы купить, напишите - Купить гл администратор
+3&#8419; гл.Администратор - 150₽\n✅ Чтобы купить, напишите - донат гл администратор
 
 
 `);
@@ -1756,7 +1784,7 @@ cmd.hear(/^(?:название)\s([0-9]+)\s([^]+)$/i, async (message, bot) => {
 
 
 
-
+//ПРОФИЛЬ123//
 
 cmd.hear(/^(?:профиль|💾 Профиль|проф)$/i, async (message, bot) => {
 	let text = ``;
@@ -1769,10 +1797,12 @@ if(message.user.clanid) text += `⚔ Kлан: ${clans[message.user.clanid].name}
 	text += `💳 В банке: ${utils.sp(message.user.bank)}$\n`;
 	text += `💽 Биткоинов: ${utils.sp(message.user.btc)}฿\n`;
 	text += `👑 Рейтинг: ${utils.sp(message.user.rating)}\n`;
+	text += `🀄Донат: ${message.user.donat}¢`;
 	if(message.user.work) text += `👔 Работа: ${works[message.user.work - 1].name}\n`;
 	if(message.user.marriage.partner) text += `👬 Партнер: ${users[message.user.marriage.partner].tag}`;
 	text += `🌟 Уровень: ${message.user.level} [${message.user.exp}/24]\n`;
-
+	
+	
 	if(message.user.transport.car || message.user.transport.yacht || message.user.transport.airplane || message.user.transport.helicopter ||
 		message.user.realty.home || message.user.realty.apartment ||
 		message.user.misc.phone || message.user.misc.farm || message.user.business || message.user.misc.pet)
@@ -2503,10 +2533,14 @@ ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час 
 
 	const sell = farms.find(x=> x.id === Number(message.args[1]));
 	if(!sell) return;
+	const count = Math.floor(message.args[2] ? Number(message.args[2]) : 1);
+	if(count <= 0) return bot(`нельзя купить 0 ферм или меньше`);
 	if(message.user.farms >= message.user.farmslimit) return bot(`вы достигли лимита ферм. ${smileerror}`);
-
-	if(message.user.balance < sell.cost) return bot(`недостаточно денег ${smileerror}`);
-	else if(message.user.balance >= sell.cost)
+	
+	if(message.user.misc.farm != 0 && message.user.misc.farm != message.args[1]) return bot(`вы не можете купить ферму другого типа`);
+	
+	if(message.user.balance < sell.cost * count) return bot(`недостаточно денег ${smileerror}`);
+	else if(message.user.balance >= sell.cost * count)
 	{
 
 		if(Number(message.args[2])){
@@ -2515,7 +2549,7 @@ ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час 
 		message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
 		message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
 
-			message.user.balance -= sell.cost;
+			message.user.balance -= sell.cost * count;
 			message.user.misc.farm = sell.id;
 			message.user.farms += message.args[2];
 
@@ -2524,17 +2558,13 @@ ${message.user.misc.farm === 3 ? '🔹' : '🔸'} 3. FM2018-BT200 100₿/час 
 💰 Ваш баланс: ${utils.sp(message.user.balance)}$`);
 
 		}
-		
-
-		message.user.balance -= sell.cost;
-		message.user.misc.farm = sell.id;
-		message.user.farms += 1;
-
-		saveUsers();
-		return bot(`вы купили ${sell.name} (x1) за ${utils.sp(sell.cost)}$
-💰 Ваш баланс: ${utils.sp(message.user.balance)}$`);
-		}	
+	}
 });
+
+
+
+
+
 
 cmd.hear(/^(?:фермы 1)\s?([0-9]+)?$/i, async (message, bot) => {
 	if(!message.args[1]) return bot(`Майнинг фермы: 
@@ -6139,29 +6169,87 @@ cmd.hear(/^(?:Для бесед)$/i, async(message, bot) => {
 });
 
 cmd.hear(/^(?:сундуки|кейсы)$/i, async (message, bot) => {
-if(!message.user.case1 || !message.user.case2) return bot(`Нету кейсов`)
 let text = ``;
-
-if(message.user.case1 || message.user.case2)
+let text1 = ``;
+if(message.user.case1 || message.user.case2 || message.user.case3)
 {
 text += `\n👜 Ваши кейсы:\n\n`;
 if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1} шт.)\nОткрыть: «Открыть 1»\n\n`;
 if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2} шт.)\nОткрыть: «Открыть 2»\n\n`;
-if(message.user.case3) text += `📦 Премиум Кейс (х${message.user.case3} шт.)\nОткрыть: «Открыть 3»\n\n`;
+if(message.user.case3) text += `📦 Донат Кейс (х${message.user.case3} шт.)\nОткрыть: «Открыть 3»\n\n`;
+}
+
+if(!message.user.case1 || !message.user.case2 || !message.user.case3)
+{
+text += `\n👜 Ваши кейсы:\n\n`;
+if(!message.user.case1) text += `📦 Стандарт кейс \nКупить: «Кейс 1»\n`;
+if(!message.user.case2) text += `📦 Премиум Кейс \nКупить: «Кейс 2»\n`;
+if(!message.user.case3) text += `📦 Донат Кейс \nКупить: «Кейс 3»\n`;
 }
 return bot(`${text}`)
+return bot(`${text1}`)
 });
 
 
 
+cmd.hear(/^(?:Кейс)\s?([0-9]+)?\s?(.*)?$/i, async (message, bot) => {
+	if(!message.args[1]) return bot(`кейсы:
+${message.user.case1 === 1 ? '🔹' : '🔸'} 1. Стандарт кейс
+${message.user.case2 === 2 ? '🔹' : '🔸'} 2. Премиум Кейс
+${message.user.case3 === 3 ? '🔹' : '🔸'} 3. Донат Кейс
+
+
+Для покупки введите "Кейсы [номер] [количество]"`);
+
+	const sell = case1.find(x=> x.id === Number(message.args[1]));
+
+	
+	if(!sell) return;
+	const count = Math.floor(message.args[2] ? Number(message.args[2]) : 1);
+	if(count <= 0) return bot(`нельзя купить 0 кейсов или меньше`);
+	if(count + message.user.case1_count > 1000) return bot(`вы не можете иметь больше 1000 кейсов одновременно`);
+	if(count + message.user.case2_count > 1000) return bot(`вы не можете иметь больше 1000 кейсов одновременно`);
+	if(count + message.user.case3_count > 1000) return bot(`вы не можете иметь больше 1000 кейсов одновременно`);
+	
+
+	if(message.user.balance < sell.cost * count) return bot(`недостаточно денег`);
+	
+	else if(message.user.balance >= sell.cost * count && (message.args[1]) == 1)
+	{
+		message.user.balance -= sell.cost * count;
+		message.user.case1 = sell.id;
+		message.user.case1_count += count;
+
+		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
+	}
+	else if(message.user.balance >= sell.cost * count && (message.args[1]) == 2)
+	{
+		message.user.balance -= sell.cost * count;
+		message.user.case2 = sell.id;
+		message.user.case2_count += count;
+
+		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
+	}	 
+	
+	if(message.user.donat <= sell.cost * count && (message.args[1]) == 3 ) return bot(`недостаточно денег`);
+	else if(message.user.donat >= sell.cost * count && (message.args[1]) == 3 )
+	{
+		message.user.donat -= sell.cost * count;
+		message.user.case3 = sell.id;
+		message.user.case3_count += count;
+
+		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
+	}	
+
+	
+});
 
 
 cmd.hear(/^(?:дать кейсы)$/i, async (message, bot) => {
 
 
-message.user.case1 += 1
-message.user.case2 += 1
-message.user.case3 += 1
+message.user.donat = 10000
+
 
 });
 
