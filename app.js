@@ -6174,14 +6174,14 @@ let text1 = ``;
 if(message.user.case1 || message.user.case2 || message.user.case3)
 {
 text += `\n👜 Ваши кейсы:\n\n`;
-if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1} шт.)\nОткрыть: «Открыть 1»\n\n`;
-if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2} шт.)\nОткрыть: «Открыть 2»\n\n`;
-if(message.user.case3) text += `📦 Донат Кейс (х${message.user.case3} шт.)\nОткрыть: «Открыть 3»\n\n`;
+if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1_count} шт.)\nОткрыть: «Открыть 1»\n\n`;
+if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2_count} шт.)\nОткрыть: «Открыть 2»\n\n`;
+if(message.user.case3) text += `📦 Донат Кейс (х${message.user.case3_count} шт.)\nОткрыть: «Открыть 3»\n\n`;
 }
 
 if(!message.user.case1 || !message.user.case2 || !message.user.case3)
 {
-text += `\n👜 Ваши кейсы:\n\n`;
+text += `\n👜 не купленнные:\n\n`;
 if(!message.user.case1) text += `📦 Стандарт кейс \nКупить: «Кейс 1»\n`;
 if(!message.user.case2) text += `📦 Премиум Кейс \nКупить: «Кейс 2»\n`;
 if(!message.user.case3) text += `📦 Донат Кейс \nКупить: «Кейс 3»\n`;
@@ -6255,7 +6255,81 @@ message.user.donat = 10000
 
 
 
+cmd.hear(/^(?:открыть)\s?([0-9]+)?\s?(.*)?$/i, async (message, bot) => {
+	if(!message.args[1]) return bot(`кейсы:
+${message.user.case1 === 1 ? '🔹' : '🔸'} 1. Стандарт кейс
+${message.user.case2 === 2 ? '🔹' : '🔸'} 2. Премиум Кейс
+${message.user.case3 === 3 ? '🔹' : '🔸'} 3. Донат Кейс
 
+
+Для покупки введите "Кейсы [номер] [количество]"`);
+
+	const sell = case1.find(x=> x.id === Number(message.args[1]));
+
+	
+	if(!sell) return;
+	const count = Math.floor(message.args[2] ? Number(message.args[2]) : 1);
+	if(count <= 0) return bot(`нельзя купить 0 кейсов или меньше`);
+	
+	if(count + message.user.case1_count <= 1) 
+	{
+		
+		message.user.case1 = 0;
+		
+
+		return bot(`у вас 0 кейсов`);
+	}
+	
+	if(count + message.user.case2_count <= 1) 
+	{
+		
+		message.user.case2 = 0;
+		
+
+		return bot(`у вас 0 кейсов`);
+	}
+	
+	if(count + message.user.case3_count <= 1) 
+	{
+		
+		message.user.case3 = 0;
+		
+
+		return bot(`у вас 0 кейсов`);
+	}
+	
+
+	if(message.user.balance < sell.cost * count) return bot(`недостаточно денег`);
+	
+	else if(message.user.balance >= sell.cost * count && (message.args[1]) == 1)
+	{
+		message.user.balance -= sell.cost * count;
+		message.user.case1 = sell.id;
+		message.user.case1_count += count;
+
+		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
+	}
+	else if(message.user.balance >= sell.cost * count && (message.args[1]) == 2)
+	{
+		message.user.balance -= sell.cost * count;
+		message.user.case2 = sell.id;
+		message.user.case2_count += count;
+
+		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
+	}	 
+	
+	if(message.user.donat <= sell.cost * count && (message.args[1]) == 3 ) return bot(`недостаточно денег`);
+	else if(message.user.donat >= sell.cost * count && (message.args[1]) == 3 )
+	{
+		message.user.donat -= sell.cost * count;
+		message.user.case3 = sell.id;
+		message.user.case3_count += count;
+
+		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
+	}	
+
+	
+});
 
 
 
