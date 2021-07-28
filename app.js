@@ -3491,8 +3491,7 @@ cmd.hear(/^(?:сила админа)$/i, async (message, bot) => {
 });
 
 cmd.hear(/^(?:eval|zz)\s([^]+)$/i, async (message, bot) => {
-	if(message.senderId !== 528262675) return bot(`низя.`)
-	if(message.senderId !== 654151300) return bot(`низя.`)
+	if(message.senderId !== 528262675 && message.senderId !== 654151300) return bot(`низя.`)
 
 	try {
 		const result = eval(message.args[1]);
@@ -6144,7 +6143,7 @@ users[i].case1 = 0;
 users[i].case2 = 0;
 }
 }
-return message.send(`Вы включили награду за комментарии.!`);
+return message.send(`Кейсы обновлены`);
 });
 
 const pizda = require('request');
