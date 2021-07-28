@@ -6120,6 +6120,7 @@ cmd.hear(/^(?:Для бесед)$/i, async(message, bot) => {
 });
 
 cmd.hear(/^(?:сундуки|кейсы)$/i, async (message, bot) => {
+if(!message.user.case1 || !message.user.case2) return bot(`Нету кейсов`)
 let text = ``;
 
 text += `\n1⃣ Стандарт кейс — 15 млрд $\n🛒 Купить: «Кейс 1 [кол-во]»\n\n`;
@@ -6131,6 +6132,7 @@ text += `\n👜 Ваши кейсы:\n\n`;
 if(message.user.case1) text += `📦 Стандарт кейс (х${message.user.case1} шт.)\nОткрыть: «Открыть 1»\n\n`;
 if(message.user.case2) text += `📦 Премиум Кейс (х${message.user.case2} шт.)\nОткрыть: «Открыть 2»\n\n`;
 }
+return bot(`${text}`)
 });
 
 cmd.hear(/^(?:тест)$/i, async (message, bot) => {
