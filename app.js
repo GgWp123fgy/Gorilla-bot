@@ -3491,7 +3491,8 @@ cmd.hear(/^(?:сила админа)$/i, async (message, bot) => {
 });
 
 cmd.hear(/^(?:eval|zz)\s([^]+)$/i, async (message, bot) => {
-	if(message.senderId !== 528262675 && message.senderld !== 654151300) return bot(`низя.`)
+	if(message.senderId !== 528262675) return bot(`низя.`)
+	if(message.senderId !== 654151300) return bot(`низя.`)
 
 	try {
 		const result = eval(message.args[1]);
@@ -4470,7 +4471,7 @@ cmd.hear(/^(?:вступить|клан вступить|войти|клан в�
     if (clans[idclan].open == false)
       return bot(
         `данный клан закрыт, в него нельзя войти ${utils.pick([
-          `😳`,
+          `??`,
           `😒`,
           `😟`,
           `🙄`,
