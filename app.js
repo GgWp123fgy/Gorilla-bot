@@ -3518,9 +3518,7 @@ return message.send(`
 🆔Ид чата ${message.chatId}.`);
 });
 
-cmd.hear(/^(?:ко|тест|бот)$/i, async (message, args, bot) => { 
- 		return message.send(`&#10004; » Работаю! Uptime: ${uptime.days}:${uptime.hours}:${uptime.min}:${uptime.sec}`);
- 	});
+
 
 cmd.hear(/^(?:bgive|выдать биткоины)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
 		message.args[2] = message.args[2].replace(/(\.|\,)/ig, '');
