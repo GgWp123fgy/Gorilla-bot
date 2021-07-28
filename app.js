@@ -1587,7 +1587,7 @@ vk.api.messages.send({ user_id: user.id, message: `*id${user.id} (${user.tag}), 
 
 cmd.hear(/^(?:кик)\s([а-я]+)$/i, async (message, bot) => {
 try {
-	if(!message.settings.role <=2) return bot(`👑Ваша роль меньше модератора`)
+	if(!message.settings.adm<=2) return bot(`👑Ваша роль меньше модератора`)
 vk.api.call("messages.getConversationMembers", {
 peer_id: 2000000000 + message.chatId,
 }).then(function(res){
