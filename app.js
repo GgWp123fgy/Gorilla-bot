@@ -1043,6 +1043,7 @@ updates.on('message', async (message) => {
 			farmslimit: 200,
 			case1: 0,
 			case2: 0,
+			case3: 0,
 			energy: 10,
 			opit: 0,
 			biz: 0,
@@ -6158,9 +6159,9 @@ return bot(`${text}`)
 cmd.hear(/^(?:дать кейсы)$/i, async (message, bot) => {
 
 
-message.user.case1 =
-message.user.case2 =
-message.user.case3 =
+message.user.case1 += 1
+message.user.case2 += 1
+message.user.case3 += 1
 
 });
 
