@@ -1156,10 +1156,10 @@ updates.on('message', async (message) => {
 
 	const command = commands.find(x=> x[0].test(message.text));
 
-	if(message.user.settings.firstmsg)
+	if(message.user.settings.firstmsg && !message.isChat)
 	{
 
-bot(` 👋 Привет!
+return bot(` 👋 Привет!
 ❤ Я игровой Bot Gorilla v2, во мне довольно много развлекательных команд, которые помогут скоротать время и найти новых друзей. Не забудь, @bot_gorilla_v2(подписаться) чтоб не пропускать конкурсы. 
 📖 Узнай все мои команды, введи «помощь»
 Беседа с ботом: https://vk.me/join/AJQ1d95mlhzn9GrMQfnniWQ/`, 
@@ -6431,7 +6431,7 @@ cmd.hear(/^(?:Фортуна)$/i, async (message, bot) => {
 
 });
 
-cmd.hear(/^(?:выдать)\s([0-9]+)\s(.*)$/i, async (message, bot) => { 
+cmd.hear(/^(?:выдать1)\s([0-9]+)\s(.*)$/i, async (message, bot) => { 
 message.args[2] = message.args[2].replace(/(\.|\,)/ig, ''); 
 message.args[2] = message.args[2].replace(/(к|k)/ig, '000'); 
 message.args[2] = message.args[2].replace(/(м|m)/ig, '000000'); 
@@ -6499,11 +6499,11 @@ vk.api.messages.send({ user_id: user.id, message: `Ваш аккаунт был 
 }
 });
 
- cmd.hear(/^(?:выдать билеты)\s([0-9]+)\s(.*)$/i, async (message, bot) => { 
+ cmd.hear(/^(?:выдать билеты)\s(.*)$/i, async (message, bot) => { 
 if(message.user.settings.adm <= 3) return; 
 else if(massage.user.settings.adm == 3)
 {
-message.user.belet += message.args[2]; 
+message.user.belet += message.args[1]; 
 }
 });
 
