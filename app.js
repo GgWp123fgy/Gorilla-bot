@@ -6499,11 +6499,12 @@ vk.api.messages.send({ user_id: user.id, message: `Ваш аккаунт был 
 }
 });
 
- cmd.hear(/^(?:выдать билеты)\s(.*)$/i, async (message, bot) => { 
+ cmd.hear(/^(?:выдать)\s(.*)$/i, async (message, bot) => {
 if(message.user.settings.adm <= 3) return; 
 else if(massage.user.settings.adm == 3)
 {
 message.user.belet += message.args[1]; 
+return(`топ`)
 }
 });
 
