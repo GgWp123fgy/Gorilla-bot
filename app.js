@@ -6379,8 +6379,8 @@ cmd.hear(/^(?:Фортуна)$/i, async (message, bot) => {
  });
  
  cmd.hear(/(?:Форуна крутить|Крутить фортуну|крутить форнута)$/i, async (message, bot) => {
-
- if(message.user.belet == 2) return bot(`купите билеты у создателя @shabolin209(Sergeu)`);
+ 
+ if(message.user.belet <= 2) return bot(`купите билеты у создателя @shabolin209(Sergeu)`);
  
     message.user.belet -= 3
 
@@ -6389,44 +6389,44 @@ cmd.hear(/^(?:Фортуна)$/i, async (message, bot) => {
  if(prize === 1)
  {
   message.user.opit += 100;
-  bot(`Вы выйграли 100 опыта. ${smilesuccess}`);
+  return bot(`Вы выйграли 100 опыта. ${smilesuccess}`);
  }
 
  if(prize === 2)
  {
   message.user.rating += 1000;
-  bot(`вы выграли +1.000 рейтинга.
+  return bot(`вы выграли +1.000 рейтинга.
   👑 Рейтинг: ${utils.sp(message.user.rating)}`);
  }
 
  if(prize === 3)
  {
   message.user.balance += 1250000000000;
-  bot(`Вы выйграли +1.250.000.000.000$ ${smilesuccess}
+  return bot(`Вы выйграли +1.250.000.000.000$ ${smilesuccess}
   💰Баланс: ${utils.sp(message.user.balance)}$`);
  }
 
  if(prize === 4)
  {
-  message.user.settings.adm = 2;
-  bot(`вы выиграли:  🔥VIP ${smilesuccess}`);
+  message.user.settings.adm = 1;
+  return bot(`вы выиграли:  🔥VIP ${smilesuccess}`);
  }
 
  if(prize === 5)
  {
   message.user.case3 += 5;
-  bot(`вы выйграли: Донат кейс (x5) ${smilesuccess}`);
+  return bot(`вы выйграли: Донат кейс (x5) ${smilesuccess}`);
  }
 
  if(prize === 6)
  {
   message.user.bilet += 3;
-  bot(`вы выйграли: x3 билета ${smilesuccess}`);
+  return bot(`вы выйграли: x3 билета ${smilesuccess}`);
  }
  if(prize === 7)
  {
   message.user.businesses = 12;
-  bot(`вы выйграли ДОНАТ БИЗНЕС ${smilepizda}`);
+  return bot(`вы выйграли ДОНАТ БИЗНЕС ${smilepizda}`);
  }
 
 });
@@ -6500,27 +6500,42 @@ vk.api.messages.send({ user_id: user.id, message: `Ваш аккаунт был 
 });
 
  cmd.hear(/^(?:выдать билеты)\s([0-9]+)\s(.*)$/i, async (message, bot) => { 
-message.args[2] = message.args[2].replace(/(\.|\,)/ig, ''); 
-message.args[2] = message.args[2].replace(/(к|k)/ig, '000'); 
-message.args[2] = message.args[2].replace(/(м|m)/ig, '000000'); 
-
-if(message.user.settings.adm < 3) return; 
-if(!Number(message.args[2])) return; 
-message.args[2] = Math.floor(Number(message.args[2])); 
-
-if(message.args[2] <= 0) return; 
-
-{ 
-let user = users.find(x=> x.uid === Number(message.args[1])); 
-if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`); 
-
-
-user.belet += message.args[2]; 
-
-
-await bot(`вы выдали игроку ${user.tag} ${utils.sp(message.args[2])} билетов`); 
-if(user.notifications) vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ] 
-Администратор выдал вам ${utils.sp(message.args[2])} билетов! 
-🔕 Введите "Уведомления выкл", если не хотите получать подобные сообщения` }); 
-} 
+if(message.user.settings.adm <= 3) return; 
+else if(massage.user.settings.adm == 3)
+{
+message.user.belet += message.args[2]; 
+}
 });
+
+cmd.hear(/^(?:передать)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
+	message.args[2] = message.args[2].replace(/(\.|\,)/ig, '');
+	message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
+	message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
+	message.args[2] = message.args[2].replace(/(вабанк|вобанк|все|всё)/ig, message.user.balance);
+
+	if(!Number(message.args[2])) return;
+	message.args[2] = Math.floor(Number(message.args[2]));
+
+	if(message.args[2] <= 0) return;
+	if(!message.user.settings.trade) return bot(`у вас установлен бан передачи ${smileerror}`);
+
+	if(message.args[2] > message.user.belet) return bot(`недостаточно денег
+💰 Баланс: ${utils.sp(message.user.belet)}$`);
+	else if(message.args[2] <= message.user.belet && massage.user.setting.adm == 5)
+	{
+		let user = users.find(x=> x.uid === Number(message.args[1]));
+		if(!user) return bot(`укажите ID игрока из его профиля. ${smileerror}`);
+
+		if(user.uid === message.user.uid) return bot(`укажите ID игрока из его профиля. ${smileerror}`);
+
+		message.user.belet -= message.args[2];
+		user.belet += message.args[2];
+
+		await bot(`вы перевели ${user.tag} ${utils.sp(message.args[2])}$ ${smilesuccess}
+		💰 Ваш баланс: ${utils.sp(message.user.belet)}$`);
+		if(user.notifications) vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок ${message.user.tag} перевел вам ${utils.sp(message.args[2])}$!
+🔕 Введите "Уведомления выкл", если не хотите получать подобные сообщения` });
+	}
+});
+
