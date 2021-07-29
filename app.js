@@ -1797,7 +1797,7 @@ if(message.user.clanid) text += `⚔ Kлан: ${clans[message.user.clanid].name}
 	text += `💳 В банке: ${utils.sp(message.user.bank)}$\n`;
 	text += `💽 Биткоинов: ${utils.sp(message.user.btc)}฿\n`;
 	text += `👑 Рейтинг: ${utils.sp(message.user.rating)}\n`;
-	text += `🀄Донат: ${message.user.donat}¢`;
+	text += `🀄Донат: ${message.user.donat}¢\n`;
 	if(message.user.work) text += `👔 Работа: ${works[message.user.work - 1].name}\n`;
 	if(message.user.marriage.partner) text += `👬 Партнер: ${users[message.user.marriage.partner].tag}`;
 	text += `🌟 Уровень: ${message.user.level} [${message.user.exp}/24]\n`;
@@ -2716,7 +2716,14 @@ ${message.user.business === 11 ? '🔸' : '🔹'} 11. Космическое а�
 	if(message.user.business) return bot(`у вас уже есть бизнес (${businesses[message.user.business - 1].name}), введите "Продать бизнес"`);
 
 	if(message.user.balance < sell.cost) return bot(`недостаточно денег`);
-	else if(message.user.balance >= message.args[1])
+	
+	else if(message.user.donat < sell.cost && (message.args[1]) == 12 ) 
+	{
+		return bot(` 💎 Это лучший игровой бизнес которого НЕТ В ПРОДАЖЕ с прибылью в 5.000.000.000.000$/час игровой валюты, успей купить за 70 РУБЛЕЙ!\n\n
+        🔑 Покупать у https://vk.com/Shabolin209  `);
+	}
+	
+	else if(message.user.balance >= message.args[1]  )
 	{
 		message.user.balance -= sell.cost;
 		message.user.business = sell.id;
@@ -2724,6 +2731,7 @@ ${message.user.business === 11 ? '🔸' : '🔹'} 11. Космическое а�
 
 		return bot(`вы купили "${sell.name}" за ${utils.sp(sell.cost)}$`);
 	}
+	
 });
 
 cmd.hear(/^(?:курс)$/i, async (message, bot) => {
@@ -6147,6 +6155,107 @@ cmd.hear(/^(?:Рп|рп команды)$/i, async (message, bot) => {
 });
 
 
+cmd.hear(/^(?:Поцеловать)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя поцеловать :/`);
+await bot(`вы поцеловали игрока @id${user.id}(${user.tag})😘😘😘.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) поцеловал вас 😘😘😘.` }); 
+});
+
+
+cmd.hear(/^(?:Ударить)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя ударить :/`);
+await bot(`вы ударили игрока @id${user.id}(${user.tag})👊👊👊.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) ударил вас 👊👊👊.` }); 
+});
+
+
+cmd.hear(/^(?:Выебать)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя выеб@ть :/`);
+await bot(`вы выеб@ли игрока @id${user.id}(${user.tag})🔍👉👌👉👌👉👌.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) выеб@л вас 👉👌👉👌👉👌👄👄👄.` }); 
+});
+
+
+cmd.hear(/^(?:Позвонить)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себе позвонить :/`);
+await bot(`вы позвонили игроку @id${user.id}(${user.tag})☎☎☎.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) позвонил вам 📲📲📲.` }); 
+});
+
+cmd.hear(/^(?:Позвать)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя позвать :/`);
+await bot(`вы позвали игрока @id${user.id}(${user.tag})👋👋👋.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) позвал вас 👋👋👋.` }); 
+});
+
+cmd.hear(/^(?:Обнять)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя обнять :/`);
+await bot(`вы обняли игрока @id${user.id}(${user.tag})🤗🤗🤗.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) обнял вас 🤗🤗🤗.` }); 
+});
+
+cmd.hear(/^(?:Убить)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя убить :/`);
+await bot(`вы убили игрока @id${user.id}(${user.tag})🔪🔪🔪.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) убил вас 🔪🔪🔪.` }); 
+});
+
+cmd.hear(/^(?:Расстрелять)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя расстрелять :/`);
+await bot(`вы расстреляли игрока @id${user.id}(${user.tag})🔫🔫🔫.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) расстреляли вас 🔫🔫🔫.` }); 
+});
+
+cmd.hear(/^(?:Отравить)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя отравить :/`);
+await bot(`вы Отравили игрока @id${user.id}(${user.tag})🔫🔫🔫.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) отравили вас 🔫🔫🔫.` }); 
+});
+
+
+cmd.hear(/^(?:Пригласить)\s([0-9]+)$/i, async (message, bot) => { 
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`); 
+if(message.args[1] == message.user.uid) return bot(`Вы не можете себя пригласить :/`);
+await bot(`вы пригласил игрока @id${user.id}(${user.tag})📃📃📃.`); 
+vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+▶ Игрок @id${user.id}(${message.user.tag}) отравили вам приглашение
+Приглашение в беседу
+https://vk.me/join/AJQ1d95mlhzn9GrMQfnniWQ/📜📜📜.` }); 
+});
+
+
+
+
+
+
 
 cmd.hear(/^(?:Для бесед)$/i, async(message, bot) => {
 	
@@ -6231,7 +6340,7 @@ ${message.user.case3 === 3 ? '🔹' : '🔸'} 3. Донат Кейс
 		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
 	}	 
 	
-	if(message.user.donat <= sell.cost * count && (message.args[1]) == 3 ) return bot(`недостаточно денег`);
+	if(message.user.donat <= sell.cost * count && (message.args[1]) == 3 ) return bot(`недостаточно донат денег`);
 	else if(message.user.donat >= sell.cost * count && (message.args[1]) == 3 )
 	{
 		message.user.donat -= sell.cost * count;
@@ -6327,7 +6436,10 @@ ${message.user.case3 === 3 ? '🔹' : '🔸'} 3. Донат Кейс
 
 		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
 	}	
-
+	else if(massage.user.donat < sell.cost* count) 
+	{
+		return bot(`вы купили "${sell.name}" (${count} шт.) за ${utils.sp(sell.cost * count)}$`);
+	}
 	
 });
 
