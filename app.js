@@ -1062,6 +1062,7 @@ updates.on('message', async (message) => {
 			uid: users.length,
 			balance: 5000,
 			bank: 0,
+			warn: 0,
 			btc: 0,
 			farm_btc: 0,
 			farms: 0,
@@ -1298,7 +1299,7 @@ cmd.hear(/^(?:помощь|команды|📚 Помощь|меню|help|comman
 {
 			keyboard:JSON.stringify(
 		{
-			"inline": true,
+			"one_time": true,
 			"buttons": [
 			[{
 				"action": {
@@ -2871,11 +2872,6 @@ cmd.hear(/^(?:ответ)\s([0-9]+)\s([^]+)$/i, async (message, bot) => {
 	Язык: 🇷🇺
 	
 	${message.args[2]}` });
-});
-
-cmd.hear(/^(?:реши)\s([0-9]+)\s(\+|\-|\/|\*)\s([0-9]+)$/i, async (message, bot) => {
-	const result = eval(`${message.args[1]} ${message.args[2]} ${message.args[3]}`);
-	return bot(`${message.args[1]} ${message.args[2]} ${message.args[3]}=${result}`);
 });
 
 cmd.hear(/^(?:работа)\s([0-9]+)$/i, async (message, bot) => {
@@ -6331,6 +6327,7 @@ return bot (`
 3&#8419;Иметь больше ферм чем ниже перечисленные привелегии. 
 4&#8419;Доступ к админ беседе. 
 5&#8419;Создание промокодов
+6⃣Продавать белеты фортуны. 
 ✅Владелец выдаëтся на всегдавсегда. 
        
        
@@ -6527,4 +6524,299 @@ if(user.notifications) vk.api.messages.send({ user_id: user.id, message: `[УВ�
 Администратор выдал вам ${utils.sp(message.args[2])} билетов! 
 🔕 Введите "Уведомления выкл", если не хотите получать подобные сообщения` }); 
 } 
+});
+
+cmd.hear(/^(?:онлайн|online)$/i, async (message, bot) => {
+		if (!message.isChat) return bot(`команда работает только в беседе!`);
+		vk.api.messages.getConversationMembers({
+			peer_id: message.peerId,
+			fields: "online"
+		}).then(async function (response) {
+			let text = `[😎] || Список людей, которые сейчас находятся онлайн:\n\n`;
+			await response.profiles.map(e => {
+				if (e.id < 1) return;
+				if (e.online != 0) text += `${['😍']} || *id${e.id} (${e.first_name.slice(0, 1)}. ${e.last_name})\n`;
+			})
+			return message.reply(text)
+		})
+	});
+cmd.hear(/^(?:чек промо)$/i, async (message, bot) => {
+if (message.user.id !== 528262675) return;
+return bot(`настройки промо.
+💣 Тип: ${config.promotip}.
+💢 Сумма: ${config.promovalue}.
+👥 Кол-во: ${config.promolimit}.
+👥 Осталось: ${config.promolimit}.
+
+Типы промо: "btc","баланс",`);
+});
+
+cmd.hear(/^(?:топ баланс|баланс топ)$/i, async (message, bot) => {
+let top = [];
+
+users.filter(a=> a.settings.adm < 3).map(x=> {
+top.push({ balance: x.balance, tag: x.tag, id: x.id, mention: x.mention });
+});
+
+top.sort((a, b) => {
+return b.balance - a.balance;
+});
+
+let text = ``;
+const find = () => {
+let pos = 1000;
+
+for (let i = 0; i < top.length; i++)
+{
+if(top[i].id === message.senderId) return pos = i;
+}
+
+return pos;
+}
+
+for (let i = 0; i < 10; i++)
+{
+if(!top[i]) return;
+const user = top[i];
+
+text += `${i === 9 ? `🔟` : `${i + 1}⃣`} @id${user.id} (${user.tag}) — $${utils.rn(user.balance)}
+`;
+}
+
+return bot(`топ игроков:
+${text}
+—————————————————
+${utils.gi(find() + 1)} ${message.user.tag} — $${utils.rn(message.user.balance)}`);
+return message.sendSticker(12692);
+});
+
+cmd.hear(/^(?:пострассылка)\s(.*)\s([^]+)/i, async (message, bot) => {
+		message.user.foolder += 1;
+		if(message.user.right < 4) return;
+		users.filter(x=> x.id !== 1).map(zz => {
+		vk.api.messages.send({ user_id: zz.id, message: `${message.args[1]}`, attachment: `${message.args[2]}`});
+		});
+		let people = 0;
+		for(let id in users) {
+		vk.api.call('messages.send', {
+		chat_id: id,
+		message: `CHAT ID: ${message.chatId}. \n Сообщение: ${message.args[1]}`,
+		attachment: `${message.args[2]}` });
+		}
+		return message.send(`💬 || Я успешно сделал рассылку!`);
+
+	});
+
+cmd.hear(/^(?:Купить билет)/i, async (message) => {
+vk.api.messages.send({ user_id: 528262675, message: message.id, message: `Новый заказ!
+👤 Игрок [id${message.user.id}|${message.user.tag}] хочет приобрести товар «Билет для Колеса Фортуны!» за 10₽ кол-во: 3 шт.`, random_id: 9,
+keyboard:JSON.stringify(
+{
+"inline": true,
+"buttons": [
+[{
+"action": {
+"type": "open_link",
+"link": `https://vk.me/id${message.user.id}`,
+"label": "💬 Открыть в лс "
+}
+}],
+]
+})
+})
+return bot(`вы отправили запрос владельцу. Ожидайте вам напишут!\n\n🎫 Билет для Колеса Фортуны: 1 шт.\n💸 Цена: 8₽`);
+});
+
+cmd.hear(/^(?:warn)\s?([0-9]+)?\s([^]+)?/i, async (message, args, bot) => {
+			let user = users.find(x=> x.uid === Number(message.args[1]));
+			if(!message.args[1] || !message.args[2]) return message.send(`🔸 » Пример команды: warn [ID] [ПРИЧИНА]`);
+			if(!Number(message.args[1])) return message.send(`🔸 » Число должно быть цифрового вида.`);
+			if(message.user.settings.adm < 3) return message.send(`недостаточно прав, для использования данной команды :>`);
+			if(!users[message.args[1]]) return message.send(`❎ » Таигровой ID игрока нет!`);
+
+			users[message.args[1]].warn += 1;
+			users[message.args[1]].warn_p = `${message.args[2]}`
+
+			let text = `✅ » ${user.tag} Вам выдали варн по причине: [${message.args[2]}]\n\n < Если вы не согласны с предупреждением, вы можете написать в репорт "Репорт Админ [id${message.user.id}| ${message.user.tag}] выдал мне предупреждение без причины" - или ваш текст.`
+			if(users[message.args[1]].warn == 5){
+			users[message.args[1]].warn = 0;
+			user.ban = true;
+			text += `\n🔸 » У вас 5 предупреждения.\n🔸 » Ваш аккаунт заблокирован.`
+			}
+			vk.api.call('messages.send', {
+			peer_id: users[message.args[1]].id,
+			message: text
+			});
+			return message.send(`✅ » Вы выдали предупреждение игроку [${users[message.args[1]].tag}].`);
+			});
+
+			cmd.hear(/^(?:Unwarn)\s?([0-9]+)?/i, async (message, args, bot) => {
+			let user = users.find(x=> x.uid === Number(message.args[1]));
+			if(!message.args[1]) return message.send(`🔸 » Пример команды: unwarn [ID]`);
+			if(!Number(message.args[1])) return message.send(`🔸 » Число должно быть цифрового вида.`);
+			if(message.user.settings.adm < 4) return message.send(`недостаточно прав, для использования данной команды :>`);
+			if(!users[message.args[1]]) return message.send(`❎ » Таигровой ID игрока нет!`);
+
+			users[message.args[1]].warn = 0;
+			users[message.args[1]].warn_p = `Нету`;
+
+			vk.api.call('messages.send', {
+			peer_id: users[message.args[1]].id,
+			message: `✅ » Администратор снял Вам все предупреждения`
+			});
+			return message.send(`✅ » Вы сняли все предупреждения игроку [${users[message.args[1]].tag}].`);
+			});
+
+cmd.hear(/^(?:setnick)\s?([0-9]+)?\s([^]+)?/i, async (message, args, bot) => {
+			let user = users.find(x=> x.uid === Number(message.args[1]));
+			if(message.user.settings.adm < 3) return message.send(`недостаточно прав, для использования данной команды :> ${smileerror}`);
+			if(!message.args[1] || !message.args[2]) return message.send(`🔸 » Пример команды: setnick [ID] [ИМЯ]`);
+			 let zaprets1 = message.args[2].toLowerCase();
+			var zapret = /(вк бо т |сова не спит|сова никогда не спит|соси хуи|с о в а н е с п и т|сованикогданеспит|сова не спит никогда|вкботру|vkvot ru|vkbotru|vkbot|v k b o t . r u|в к бот|порно|botvk|ботвк|vkbot|кбот|bot vk|хентай|секс|пидр|трах|насилие|зоофил|бдсм|сирия|hentai|hentay|синий кит|самоубийство|террористы|слив|цп|cp|маленькие|малолетки|сучки|трах|ебля|изнасилование|блять|хуй|пошел нах|тварь|мразь|сучка|гандон|уебок|шлюх|паскуда|оргазм|девственницы|целки|рассовое|мелкие|малолетки|несовершеннолетние|ебля|хентай|sex|bdsm|ebl|trax|syka|shlux|инцест|iznas|мать|долбаеб|долбаёб|хуесос|сучка|сука|тварь|пездюк|хуй|шлюх|бог|сатана|мразь|хуйло|создатели|создатель|сергей|Толя|анатолий|Пидорас|Гнида|Похуй|всех|на|по|шёл|хуй|xyй|хyй|xуй|пизда|чмо|все|пошли|мамку|ебал|в|пизду|жопу|dibil|лох|даун|еблан|вонючий|урод)/
+		   if (zapret.test(zaprets1) == true) {
+					return message.send(`Придумайте адекватный ник ${smileerror}`);
+			}
+			var filter0 = /(http(s)?:\/\/.)?(www\.)?[-a-z0-9@:%._\+~#=]{1,256}\.[a-z]{2,6}/
+			var filter1 = /(?!http(s)?:\/\/)?(www\.)?[а-я0-9-_.]{1,256}\.(рф|срб|блог|бг|укр|рус|қаз|امارات.|مصر.|السعودية.)/
+			var lol = filter0.test(zaprets1)
+			var lol1 = filter1.test(zaprets1)
+			if (filter0.test(zaprets1) == true || filter1.test(zaprets1) == true) {
+				return message.send(`Придумайте адекватный ник ${smileerror}`);
+			}
+			users[message.args[1]].tag = message.args[2];
+			return message.send(`Вы сменили ник игрока на: ${message.args[2]} ${smilesuccess}`);
+		});
+
+cmd.hear(/^(?:снять|забрать)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
+			if(message.user.settings.adm < 4) return bot(`команда <<снять>> доступна только Создателю бота! 💸`)
+			message.args[1] = Number(message.args[1])
+			if(!message.args[1]) return
+			let user = users.find(x=> x.uid === message.args[1])
+			message.args[2] = message.args[2].replace(/(\.|\,)/ig, '');
+			message.args[2] = message.args[2].replace(/(к|k)/ig, '000');
+			message.args[2] = message.args[2].replace(/(м|m)/ig, '000000');
+			message.args[2] = message.args[2].replace(/(всё)/ig, user.balance);
+			message.args[2] = Number(message.args[2])
+			let i = Number(message.args[2])
+			if(!i) return
+			if(user.settings.adm > message.user.settings.adm) return bot(`вы не можете забирать деньги у Администратора выше вашего уровня! 💸`)
+			if(user.balance === 0) return bot(`у игрока закончилась игровая валюта! 💸`)
+			if(i > user.balance) i = user.balance
+			user.balance -= i
+			return bot(`вы успешно забрали у игрока *id${user.id}(${user.tag}) ${utils.sp(i)}$! 💸`)
+			});
+			
+			cmd.hear(/^(?:вайп)$/i, async (message, bot) => {
+		if(message.user.settings.adm < 5) return bot(`недостаточно прав, для использования данной команды =_=`);
+return bot(`Команды очищает всем что-то определенное, под цифру "0"! Внимание, команда доступна от уровня администратора 5, тоесть от привилегии создателя. \nКоманды: \n\n1. Вайп баланса - очищает всем баланс, ставим им 5.000$ \n 2. Вайп рейтинга - очищает всем рейтинг, ставим им "0".\n 3. Вайп банка - очищает всем банк. \n 4. Вайп btc - очищает всем битокины.`);
+	});
+	
+	cmd.hear(/^(?:вайп банка)$/i, async (message, bot) => {
+		if(message.user.settings.adm < 5) return bot(`недостаточно прав, для использования данной команды :>`);
+	for(i=0;i<20000;i++){
+	if(users[i]){
+	users[i].bank = 0;
+	}
+	}
+	return message.send(`готово! Установил всем банк 0.`);
+	});
+
+	cmd.hear(/^(?:вайп btc)$/i, async (message, bot) => {
+		if(message.user.settings.adm < 5) return bot(`недостаточно прав, для использования данной команды :>`);
+	for(i=0;i<20000;i++){
+	if(users[i]){
+	users[i].btc = 0;
+	}
+	}
+	return message.send(`готово! Установил всем btc 0.`);
+	});
+	
+	cmd.hear(/^(?:вайп баланса)$/i, async (message, bot) => {
+		if(message.user.settings.adm < 5) return bot(`недостаточно прав, для использования данной команды :>`);
+		for(i=0;i<20000;i++){
+	if(users[i]){
+	users[i].balance = 5000;
+	}
+	}
+	return message.send(`готово! Установил всем баланс 5.000$`);
+	});
+
+	cmd.hear(/^(?:вайп рейтинга)$/i, async (message, bot) => {
+		if(message.user.settings.adm < 5) return bot(`недостаточно прав, для использования данной команды :>`);
+	for(i=0;i<20000;i++){
+	if(users[i]){
+	users[i].rating = 0;
+	}
+	}
+	return message.send(`готово! Установил всем рейтинг 0.`);
+	});
+
+cmd.hear(/^(?:пнх|снять админку|снять привилегию)\s?([0-9]+)?/i, async (message, args, bot) => {
+			message.user.foolder += 1;
+			let user = users.find(x=> x.uid === Number(message.args[1]));
+			if(message.user.settings.adm < 5) return message.send(`недостаточно прав, для использования данной команды :>`);
+			if(!message.args[1] || !users[message.args[1]]) return message.send(`[💰] » Пример: 'снять админку [ID]'`);
+			users[message.args[1]].settings.adm = 0;
+			return message.send(`Привилегия у игрока [@id${users[message.args[1]].id}(${users[message.args[1]].tag})] снята.`);
+		});
+
+cmd.hear(/^(?:adm)\s([0-9]+)\s(.*)$/i, async (message, bot) => {
+
+if(message.user.settings.adm < 5) return bot(`недостаточно прав, для использования данной команды :>`);
+if(!Number(message.args[2])) return;
+message.args[2] = Math.floor(Number(message.args[2]));
+
+if(message.args[2] <= 0) return;
+
+{
+let user = users.find(x=> x.uid === Number(message.args[1]));
+if(!user) return bot(`неверный ID игрока`);
+
+
+user.settings.adm = message.args[2];
+
+
+await bot(`вы выдали игроку ${user.tag} привилегию "${message.args[2].toString().replace(/0/gi, "Игрок ✔").replace(/1/gi, "Супер Игрок 🔥").replace(/2/gi, "Админ 🔥").replace(/3/gi, "Купленный Создатель 🔥").replace(/4/gi, "Купленный Создатель+ 🔥").replace(/5/gi, "⚡ Основатель").replace(/6/gi, "☀ Наблюдатель ").replace(/7/gi, "🎅 Дед Мороз").replace(/8/gi, "Заместитель").replace(/9/gi, "Создатель")}" > ${smilesuccess}`);
+if(user.notifications) vk.api.messages.send({ user_id: user.id, message: `[УВЕДОМЛЕНИЕ]
+Администратор ${message.user.tag} выдал вам привилегию "${message.args[2].toString().replace(/0/gi, "Игрок ✔").replace(/1/gi, "Супер Игрок 🔥").replace(/2/gi, "Админ 🔥").replace(/3/gi, "Купленный Создатель 🔥").replace(/4/gi, "Купленный Создатель+ 🔥").replace(/5/gi, "⚡ Основатель").replace(/6/gi, "☀ Наблюдатель ").replace(/7/gi, "🎅 Дед Мороз").replace(/8/gi, "Заместитель").replace(/9/gi, "Создатель")}"!
+🔕 Введите "Уведомления выкл", если не хотите получать подобные сообщения` });
+}
+});
+
+cmd.hear(/^(?:подарок)$/i, async (message, bot) => {
+	await bot(`акция завершена, следи за новостями группы. 😉 `);
+});
+
+cmd.hear(/^(?:обнулить|delluser)\s?([0-9]+)?/i, async (message, args, bot) => {
+    let user = users.find(x=> x.uid === Number(message.args[1]));
+	if(message.user.settings.adm < 4) return bot(`го секс`)
+	if(!message.args[1] || !users[message.args[1]]) return message.send(`Использование: 'обнулить [ID]'`);
+		users[message.args[1]].bank = 0;
+		users[message.args[1]].rating = 0;
+		users[message.args[1]].balance = 0;
+		users[message.args[1]].btc = 0;
+		users[message.args[1]].business = 0;
+		users[message.args[1]].phone = 0;
+		users[message.args[1]].car = 0;
+        users[message.args[1]].yacht = 0;
+		users[message.args[1]].case3 = 0;
+		users[message.args[1]].case2 = 0;
+		users[message.args[1]].helicopter = 0;
+		users[message.args[1]].airplane = 0;
+		users[message.args[1]].computer = 0;
+		users[message.args[1]].biz = 0;
+		users[message.args[1]].pet = 0;
+		users[message.args[1]].farm_btc = 0;
+		users[message.args[1]].settings.adm = 0;
+		users[message.args[1]].farms = 0;
+			
+
+		return message.send(`Вы обнулили пользователя [@id${users[message.args[1]].id}(${users[message.args[1]].tag})]`);
+		console.log(`Был обнулён игрок id${users[message.args[1]].id}`);
+		console.log(``);
+		saveUsers();
+	});
+	
+	cmd.hear(/^(?:бот)$/i, async (message, bot) => {
+	await bot(`в боте зарегистрировано ${utils.sp(users.length)} игроков.`);
 });
